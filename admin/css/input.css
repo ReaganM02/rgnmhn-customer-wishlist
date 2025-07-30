@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#wpcontent {
+  @apply rgn-p-0;
+}
+
+.notice {
+  @apply rgn-m-0 rgn-mb-4;
+}
