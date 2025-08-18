@@ -19,7 +19,17 @@ class WishlistModel
   }
 
   /**
-   * @param array{type: 'user'|'token', id: int|string} $identifier The identifier for the wishlist owner.
+   * Adds a product to a user's or guest's wishlist.
+   *
+   * This method inserts a new wishlist entry for the specified product and owner.
+   * The owner can be either a registered user (identified by user ID) or a guest (identified by a unique token).
+   * 
+   * @param int $productID The ID of the product to add to the wishlist.
+   * @param array{type: 'user'|'token', id: int|string} $identifier
+   *        The identifier for the wishlist owner:
+   *        - ['type' => 'user', 'id' => int] for a registered user.
+   *        - ['type' => 'token', 'id' => string] for a guest session.
+   * @return bool True if the product was successfully added, false otherwise.
    */
   public function add(int $productID, array $identifier)
   {
@@ -31,15 +41,26 @@ class WishlistModel
         'token' => $identifier['type'] === 'token' ? $identifier['id'] : null,
       ],
       [
-        '%d',
-        '%d',
-        '%s',
-        '%d'
+        '%d', // product_id
+        '%d', // user_id
+        '%s'  // token
       ]
     );
     return (bool) $result;
   }
 
+  /**
+   * Merges a guest user's wishlist into a registered user's wishlist.
+   *
+   * This method transfers all wishlist items associated with a guest token to the given user ID.
+   * - If a product exists in the guest wishlist but not in the user's wishlist, it is reassigned to the user.
+   * - If a product exists in both the guest and user wishlists, the guest entry is deleted to avoid duplicates.
+   *
+   * @param string $token  The unique token identifying the guest wishlist.
+   * @param int    $userID The ID of the registered user to merge the wishlist into.
+   * @return void
+   * 
+   */
   public function mergeGuestWishlist(string $token, int $userID)
   {
     $guestProductIDs = $this->db->get_col($this->db->prepare("SELECT product_id FROM $this->tableName WHERE token = %s", $token));
@@ -51,7 +72,7 @@ class WishlistModel
         if (!in_array($productID, $userProductIDs)) {
           $this->db->update(
             $this->tableName,
-            ['user_id' => $userID, $token => null],
+            ['user_id' => $userID, 'token' => null],
             ['token' => $token, 'product_id' => $productID],
           );
         } else {
@@ -63,7 +84,17 @@ class WishlistModel
   }
 
   /**
-   * @param array{type: 'user'|'token', id: int|string} $identifier The identifier for the wishlist owner.
+   * Checks if a product exists in a user's or guest's wishlist.
+   *
+   * This method determines whether a specific product is present in the wishlist
+   * for the given owner, which can be either a registered user (by user ID) or a guest (by token).
+   *
+   * @param int $productID The ID of the product to check.
+   * @param array{type: 'user'|'token', id: int|string} $identifier
+   *        The identifier for the wishlist owner:
+   *        - ['type' => 'user', 'id' => int] for a registered user.
+   *        - ['type' => 'token', 'id' => string] for a guest session.
+   * @return bool True if the product is in the wishlist, false otherwise.
    */
   public function isProductInWishlist(int $productID, array $identifier)
   {
@@ -73,5 +104,48 @@ class WishlistModel
     $count = $this->db->get_var($sql);
 
     return $count > 0;
+  }
+
+  /**
+   * Removes a specific product from a user's wishlist.
+   *
+   * This method deletes a wishlist entry that matches both the given product ID and user ID.
+   * It does not affect guest wishlists (entries identified by a token).
+   *
+   * @param int $productID The ID of the product to remove from the wishlist.
+   * @param int $userID    The ID of the registered user whose wishlist will be modified.
+   * @return bool          True if the product was successfully removed, false otherwise.
+   *
+   * @security
+   * - Uses parameterized queries to prevent SQL injection.
+   * - Assumes $productID and $userID are validated integers by the caller.
+   */
+  public function delete(int $productID, int $userID)
+  {
+    $result = $this->db->delete($this->tableName, ['product_id' => $productID, 'user_id' => $userID], ['%d', '%d']);
+    return (bool)($result > 0);
+  }
+
+
+  /**
+   * Retrieves all wishlist entries for a specific registered user.
+   *
+   * This method fetches all wishlist items associated with the given user ID,
+   * ordered by the date they were added (most recent first).
+   * Only entries for registered users (not guests) are returned.
+   *
+   * @param int $userID The ID of the registered user whose wishlist entries will be retrieved.
+   * @return array An array of associative arrays representing wishlist entries.
+   *               Returns an empty array if no entries are found.
+   *
+   * @security
+   * - Uses parameterized queries to prevent SQL injection.
+   * - Assumes $userID is a validated integer by the caller.
+   */
+  public function getWishlistEntriesByUserID(int $userID)
+  {
+    $sql = $this->db->prepare("SELECT * FROM $this->tableName WHERE user_id = %d ORDER BY date_created DESC", $userID);
+    $result = $this->db->get_results($sql, ARRAY_A);
+    return $result ?: [];
   }
 }
