@@ -7,6 +7,23 @@ if (!defined('ABSPATH')) {
   exit;
 }
 
+/**
+ * Class WishlistModel
+ *
+ * Handles all database operations related to customer wishlists.
+ *
+ * This class provides methods for adding, removing, merging, and querying wishlist items
+ * for both registered users and guest users (identified by a unique token). It abstracts
+ * the underlying database interactions and ensures that all queries are performed securely
+ * using parameterized statements to prevent SQL injection.
+ *
+ * ## Purpose
+ * - To manage wishlist entries for both logged-in users and guests.
+ * - To provide a unified API for adding, removing, merging, and retrieving wishlist items.
+ * - To encapsulate all wishlist-related database logic in a single, reusable class.
+ *
+ * @package Src\Models
+ */
 class WishlistModel
 {
   private $db;
