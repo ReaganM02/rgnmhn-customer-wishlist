@@ -37,7 +37,7 @@
  * Global localized object injected via wp_localize_script().
  * @type {RgnWishlistSingleProduct}
  */
-const rgn_wishlist_single_product = window.rgn_wishlist_single_product
+const WISHLIST_CONFIG = window.rgn_wishlist_single_product
 
 class WishlistSingleProduct {
   /** @type {HTMLDivElement|null} Root container for injected template content */
@@ -57,7 +57,7 @@ class WishlistSingleProduct {
  * Used to decide which template to show for a selected variation.
  * @type {number[]}
  */
-  #variationAddedIds = rgn_wishlist_single_product.added_ids.map((n) => Number(n))
+  #variationAddedIds = WISHLIST_CONFIG.added_ids.map((n) => Number(n))
 
   /** @type {number|undefined} The currently selected variation id (variable products) */
   #variationID
@@ -72,7 +72,7 @@ class WishlistSingleProduct {
  * Mirrors the server-provided value, kept in sync after successful add.
  * @type {'yes'|'no'}
  */
-  #isProductAdded = rgn_wishlist_single_product.is_added
+  #isProductAdded = WISHLIST_CONFIG.is_added
 
   /**
  * @constructor
@@ -143,9 +143,9 @@ class WishlistSingleProduct {
       } else {
         formData.append('product-id', this.#variationID)
       }
-      formData.append('security', rgn_wishlist_single_product.nonce.add)
+      formData.append('security', WISHLIST_CONFIG.nonce.add)
 
-      const request = await fetch(rgn_wishlist_single_product.url, {
+      const request = await fetch(WISHLIST_CONFIG.url, {
         method: 'POST',
         body: formData
       })
@@ -227,7 +227,7 @@ class WishlistSingleProduct {
  * @public
  */
   get productType() {
-    return rgn_wishlist_single_product.product_type
+    return WISHLIST_CONFIG.product_type
   }
 
   /**
@@ -235,7 +235,7 @@ class WishlistSingleProduct {
  * @public
  */
   get productID() {
-    return Number(rgn_wishlist_single_product.product_id)
+    return Number(WISHLIST_CONFIG.product_id)
   }
 
 }
