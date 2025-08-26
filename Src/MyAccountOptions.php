@@ -29,11 +29,31 @@ if (!defined('ABSPATH')) {
 final class MyAccountOptions
 {
   /**
+   *  Option key for storing this feature's settings in WordPress.
+   *  @since 1.0.0
+   */
+  private const KEY = 'rgn_customer_wishlist_my_account_settings';
+
+  /**
    * Cached plugin options array.
    *
    * @var array<string, mixed>|null
    */
   private static $option =  null;
+
+  /**
+   * Returns the canonical option key used to persist settings in wp_options.
+   *
+   * Use this helper instead of hard-coding the option name. If the key ever
+   * needs to change, only this class must be updated; all call sites remain intact.
+   *
+   * @return string The option key (e.g. 'rgn_customer_wishlist_my_account_settings').
+   * @since 1.0.0
+   */
+  public static function key()
+  {
+    return self::KEY;
+  }
 
   /**
    * Retrieve and cache the My Account options from the database.

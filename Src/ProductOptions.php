@@ -49,7 +49,7 @@ class ProductOptions
    * Use this helper instead of hard-coding the option name. If the key ever
    * needs to change, only this class must be updated; all call sites remain intact.
    *
-   * @return string The option key (e.g. 'rgn_customer_waitlist').
+   * @return string The option key (e.g. 'rgn_customer_wishlist_settings').
    * @since 1.0.0
    */
   public static function key()
