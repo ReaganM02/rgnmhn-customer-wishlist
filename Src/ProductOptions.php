@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Src;
 
 // Exit if accessed directly.
@@ -10,8 +12,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class ProductOptions
  *
- * Handles retrieval, sanitization, and management of the
- * wishlist product options for the RGN Customer Wishlist plugin.
+ * Handles retrieval, caching, and accessors for the Wishlist product options.
  *
  * Provides access to settings such as:
  * - Guest user allowance and cookie expiry
@@ -36,6 +37,25 @@ class ProductOptions
    */
   private static $option;
 
+  /**
+   *  Option key for storing this feature's settings in WordPress.
+   *  @since 1.0.0
+   */
+  private const KEY = 'rgn_customer_waitlist';
+
+  /**
+   * Returns the canonical option key used to persist settings in wp_options.
+   *
+   * Use this helper instead of hard-coding the option name. If the key ever
+   * needs to change, only this class must be updated; all call sites remain intact.
+   *
+   * @return string The option key (e.g. 'rgn_customer_waitlist').
+   * @since 1.0.0
+   */
+  public static function key()
+  {
+    return self::KEY;
+  }
 
   /**
    * Retrieve and cache the product options from the database.
@@ -47,7 +67,7 @@ class ProductOptions
    */
   private static function getOptions()
   {
-    return self::$option ??= get_option(RGN_CUSTOMER_WISHLIST_SETTINGS, []);
+    return self::$option ??= get_option(self::key(), []);
   }
 
 
