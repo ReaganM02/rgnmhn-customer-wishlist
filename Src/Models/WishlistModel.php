@@ -165,4 +165,41 @@ class WishlistModel
     $result = $this->db->get_results($sql, ARRAY_A);
     return $result ?: [];
   }
+
+  /**
+   * Get the subset of product IDs that actually exist in this table.
+   *
+   * Accepts a list of candidate product IDs, sanitizes and de-duplicates them,
+   * then performs a parameterized IN(...) query against `$this->tableName` to
+   * return only the IDs that are present. Results are ordered by the most recent
+   * `date_created` first.
+   *
+   *
+   * @param array<int|string> $productIDs  Candidate product IDs to check.
+   * @return array<int|string>             Matching product IDs present in the table (newest first).
+   *                                       Returns [] if none match or input is empty.
+   * @since 1.0.0
+   */
+  public function getProductIDs(array $productIDs): array
+  {
+    if (empty($productIDs)) {
+      return [];
+    }
+
+    // Sanitize IDs
+    $productIDs = array_values(array_filter(array_map('absint', array_unique($productIDs))));
+
+    // Create placeholders
+    $placeholders = implode(',', array_fill(0, count($productIDs), '%d'));
+
+    // Query only product_id
+    $sql = $this->db->prepare(
+      "SELECT product_id FROM $this->tableName WHERE product_id IN ($placeholders) ORDER BY date_created DESC",
+      ...$productIDs
+    );
+
+    $results = $this->db->get_col($sql);
+
+    return $results ?: [];
+  }
 }
