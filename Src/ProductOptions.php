@@ -41,7 +41,7 @@ class ProductOptions
    *  Option key for storing this feature's settings in WordPress.
    *  @since 1.0.0
    */
-  private const KEY = 'rgn_customer_waitlist';
+  private const KEY = 'rgn_customer_wishlist_settings';
 
   /**
    * Returns the canonical option key used to persist settings in wp_options.
