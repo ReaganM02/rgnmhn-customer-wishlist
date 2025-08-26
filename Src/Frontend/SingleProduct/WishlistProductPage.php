@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Frontend;
+namespace Src\Frontend\SingleProduct;
 
 
 use Src\Models\WishlistModel;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Class SingleProduct
+ * Class WishlistProductPage
  *
  * Handles single product page wishlist UI:
  * - Registers hooks and/or shortcode (based on settings)
@@ -30,9 +30,8 @@ if (!defined('ABSPATH')) {
  * - `rgn_wishlist_placement_product_page_priority` (int): set hook priority
  *
  * @since 1.0.0
- * @package RGN\CustomerWishlist
  */
-class SingleProduct
+class WishlistProductPage
 {
   /**
    * Bootstrap the class by wiring up hooks.
@@ -293,7 +292,7 @@ class SingleProduct
    *
    * Localizes:
    * - `url` (admin-ajax)
-   * - `nonce` values for add/get actions
+   * - `nonce` values for add actions
    * - `product_id`, `added_ids`, `product_type`, `is_added`
    *
    * Registers an inline CSS handle used to inject CSS variables.
@@ -310,7 +309,6 @@ class SingleProduct
         'url' => admin_url('admin-ajax.php'),
         'nonce' => [
           'add' => wp_create_nonce('rgn_add_customer_wishlist_security'),
-          'get' => wp_create_nonce('rgn_wishlist_single_product_get')
         ],
         'product_id' => get_the_ID(),
         'added_ids' => $this->getAddedVariationIDs(get_the_ID()),

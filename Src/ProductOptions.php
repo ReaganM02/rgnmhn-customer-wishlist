@@ -52,7 +52,7 @@ class ProductOptions
    * @return string The option key (e.g. 'rgn_customer_wishlist_settings').
    * @since 1.0.0
    */
-  public static function key()
+  public static function optionKey()
   {
     return self::KEY;
   }
@@ -67,7 +67,7 @@ class ProductOptions
    */
   private static function getOptions()
   {
-    return self::$option ??= get_option(self::key(), []);
+    return self::$option ??= get_option(self::optionKey(), []);
   }
 
 

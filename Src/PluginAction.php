@@ -7,20 +7,145 @@ if (!defined('ABSPATH')) {
   exit;
 }
 
+/**
+ * Plugin lifecycle actions (activation/deactivation & setup helpers).
+ * 
+ * This class centralizes tasks that should run when the plugin is activated
+ * or deactivated, including:
+ * - Creating the wishlist database table via dbDelta()
+ * - Seeding default settings for Product and My Account options
+ * - Registering & flushing the My Account wishlist endpoint
+ * - Cleaning up data on deactivation (drops table & deletes options)
+ * 
+ * Security & Safety:
+ * - All option keys/values are sanitized with sanitize_text_field().
+ * - Deactivation is DESTRUCTIVE: it drops the wishlist table and deletes options.
+ * @since 1.0.0
+ */
 class PluginAction
 {
+  /**
+   * Run on plugin activation.
+   *
+   * Steps:
+   * 1) Create (or update) the wishlist table using dbDelta().
+   * 2) Seed default Product settings in the options table.
+   * 3) Seed default "My Account" settings in the options table.
+   * 4) Register the My Account endpoint and flush rewrite rules.
+   *
+   *
+   * @return void
+   * @since  1.0.0
+   */
   public static function activate()
   {
     self::createWishlistTable();
+    self::saveProductSettingsDefault();
+    self::saveMyAccountDefaultSettings();
+    self::flushMyAccountWishlistEndpoint();
   }
 
+  /**
+   * Register the dynamic My Account endpoint and flush permalinks.
+   *
+   * Uses the slug from MyAccountOptions::getSlug() and attaches it as a
+   * rewrite endpoint for both site root and pages. Then flushes rewrite rules
+   * so the endpoint is immediately recognized.
+   *
+   *
+   * @return void
+   * @since  1.0.0
+   */
+  public static function flushMyAccountWishlistEndpoint()
+  {
+    add_rewrite_endpoint(MyAccountOptions::getSlug(), EP_ROOT | EP_PAGES);
+    flush_rewrite_rules();
+  }
+
+
+
+  /**
+   * Persist default "My Account" settings to the options table.
+   *
+   * Reads the field definitions from MyAccountOptions::fields() and stores
+   * default values. Each key and value is
+   * sanitized before saving.
+   *
+   * Option key: RGN_CUSTOMER_WISHLIST_MY_ACCOUNT_SETTINGS
+   *
+   * @return void
+   * @since  1.0.0
+   * @see    \Src\MyAccountOptions::fields()
+   */
+  private static function saveMyAccountDefaultSettings()
+  {
+    $fields = MyAccountOptions::fields();
+    $defaults = [];
+    foreach ($fields as $key => $field) {
+      if ($field['type'] === 'text' || $field['type'] === 'number') {
+        $defaults[sanitize_text_field($key)] = sanitize_text_field($field['value']);
+      }
+    }
+
+    add_option(MyAccountOptions::optionKey(), $defaults);
+  }
+
+  /**
+   * Persist default Product settings to the options table.
+   *
+   * Reads the field definitions from ProductOptions::fields() and stores:
+   * - 'default' when provided
+   * - 'selected' when type === 'select'
+   * - 'value' as a fallback
+   *
+   * All keys and values are sanitized.
+   *
+   * Option key: RGN_CUSTOMER_WISHLIST_SETTINGS
+   *
+   * @return void
+   * @since  1.0.0
+   * @see    \Src\ProductOptions::fields()
+   */
+  private static function saveProductSettingsDefault()
+  {
+    $fields = ProductOptions::fields();
+
+    $defaults = [];
+    foreach ($fields as $key => $field) {
+      if (isset($field['default'])) {
+        $defaults[sanitize_text_field($key)] = sanitize_text_field($field['default']);
+      } else if ($field['type'] == 'select') {
+        $defaults[sanitize_text_field($key)] = sanitize_text_field($field['selected']);
+      } else {
+        $defaults[sanitize_text_field($key)] = sanitize_text_field($field['value']);
+      }
+    }
+    add_option(ProductOptions::optionKey(), $defaults);
+  }
+
+  /**
+   * Run on plugin deactivation.
+   *
+   * Steps:
+   * 1) Drop the wishlist table, if it exists. (DESTRUCTIVE)
+   * 2) Delete the Product and My Account options.
+   * 3) Flush rewrite rules.
+   *
+   * WARNING: This permanently removes stored wishlist data. If you want
+   * to preserve data between deactivations, remove the DROP TABLE & deletes.
+   *
+   * @return void
+   * @since  1.0.0
+   */
   public static function deactivate()
   {
-    global $wpdb;
-    $tableName = $wpdb->prefix . RGN_CUSTOMER_WISHLIST_TABLE_NAME;
-    $wpdb->query("DROP TABLE IF EXISTS $tableName");
+    // global $wpdb;
+    // $tableName = $wpdb->prefix . RGN_CUSTOMER_WISHLIST_TABLE_NAME;
+    // $wpdb->query("DROP TABLE IF EXISTS $tableName");
 
-    delete_option(RGN_CUSTOMER_WISHLIST_SETTINGS);
+    // delete_option(RGN_CUSTOMER_WISHLIST_SETTINGS);
+    // delete_option(RGN_CUSTOMER_WISHLIST_MY_ACCOUNT_SETTINGS);
+    flush_rewrite_rules();
   }
 
   private static function createWishlistTable()

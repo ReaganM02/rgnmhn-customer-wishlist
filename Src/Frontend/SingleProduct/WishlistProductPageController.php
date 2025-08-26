@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Frontend;
+namespace Src\Frontend\SingleProduct;
 
 use Src\Models\WishlistModel;
 
@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
   exit;
 }
 
-class Controller
+class WishlistProductPageController
 {
   public function __construct()
   {
@@ -25,14 +25,24 @@ class Controller
   public function add()
   {
     check_ajax_referer('rgn_add_customer_wishlist_security', 'security');
-    $productID = isset($_POST['productID']) && !empty($_POST['productID']) ? sanitize_text_field($_POST['productID']) : 0;
+
+    $productID = sanitize_text_field($_POST['product-id']) ?? 0;
 
     $identifier = wishListIdentifier();
 
     $wishlist = new WishlistModel();
 
-    $added = $wishlist->add($productID, $identifier);
+    $alreadyAdded = $wishlist->isProductInWishlist($productID, $identifier);
 
-    wp_send_json_success($added);
+    if ($alreadyAdded) {
+      wp_send_json_error('Product is already in the wishlist.');
+    }
+
+    $added = $wishlist->add($productID, $identifier);
+    if ($added) {
+      wp_send_json_success($productID);
+    }
+    error_log('Failed to add wishlist');
+    wp_send_json_error('Failed to add wishlist.');
   }
 }

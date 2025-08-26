@@ -50,7 +50,7 @@ final class MyAccountOptions
    * @return string The option key (e.g. 'rgn_customer_wishlist_my_account_settings').
    * @since 1.0.0
    */
-  public static function key()
+  public static function optionKey()
   {
     return self::KEY;
   }
@@ -65,7 +65,7 @@ final class MyAccountOptions
    */
   private static function getOptions()
   {
-    return self::$option ??= get_option(RGN_CUSTOMER_WISHLIST_MY_ACCOUNT_SETTINGS, []);
+    return self::$option ??= get_option(self::optionKey(), []);
   }
 
   /**
