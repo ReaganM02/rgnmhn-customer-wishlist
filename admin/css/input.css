@@ -4,8 +4,54 @@
 
 #wpcontent {
   @apply rgn-p-0;
+  font-size: 15px;
+}
+body {
 }
 
 .notice {
   @apply rgn-m-0 rgn-mb-4;
+}
+
+input[type="radio"]:checked + label {
+  @apply rgn-bg-blue-500 rgn-text-white;
+}
+
+.wp-picker-container {
+    position: relative;
+}
+.wp-picker-holder {
+    position: absolute;
+    top: 100%; /* Position it right below the input field */
+    left: 0;
+    z-index: 999; /* Ensure it's on top of other elements */
+}
+
+.rgn-tab-content {
+  @apply rgn-hidden;
+}
+
+.rgn-tab-content.rgn-content-active {
+  @apply rgn-block;
+}
+
+.rgn-tab-active {
+  @apply rgn-bg-blue-500 rgn-text-white;
+}
+
+.rgn-switch {
+  @apply rgn-bg-zinc-200;
+}
+
+.rgn-switch::before {
+  content: "";
+  @apply rgn-absolute rgn-bg-zinc-300 rgn-w-4 rgn-h-4 rgn-block rgn-rounded rgn-left-0 rgn-transition-all;
+}
+
+input[type="checkbox"]:checked + label .rgn-switch::before {
+  @apply rgn-left-5 rgn-bg-blue-500;
+}
+
+input[type="checkbox"]:checked + label .rgn-switch {
+  @apply rgn-bg-blue-100;
 }
