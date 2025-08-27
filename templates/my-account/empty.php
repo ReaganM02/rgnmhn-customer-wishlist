@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
   $args = [
     'classes' => ['rgn-bg-blue-500', 'rgn-px-4', 'rgn-py-2', 'rgn-text-white', 'rgn-block', 'rgn-w-max', 'rgn-m-auto', 'rgn-mt-4'],
     'link' => '/shop',
-    'text' => 'Go to Shop'
+    'text' => __('Go to Shop', 'rgn-customer-wishlist')
   ];
 
   $args = apply_filters('rgn_customer_wishlist_empty_link_args', $args);
