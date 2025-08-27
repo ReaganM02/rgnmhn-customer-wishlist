@@ -11,7 +11,7 @@
  * #### Dependencies
  * @typedef {Object} RgnWishlistSingleProduct
  * @property {string} url - The Ajax endpoint URL (e.g., admin-ajax.php).
- * @property {{ add: string }} nonce - Nonce object for security checks.
+ * @property {{ add: string, get: string }} nonce - Nonce object for security checks.
  * @property {number|string} product_id - Current product ID (integer).
  * @property {Array<number|string>} added_ids - Already added variation IDs.
  * @property {"simple"|"variable"} product_type - Type of the product.
@@ -238,6 +238,62 @@ class WishlistSingleProduct {
     return Number(WISHLIST_CONFIG.product_id)
   }
 
+  /**
+  * Initialize wishlist state on page load.
+  * 
+  * Purpose:
+  * - Refreshes potentially stale, client-side `WISHLIST_CONFIG` by fetching
+  *   the authoritative state from the server (via admin-ajax).
+  * - Mitigates browser/optimizer caching by requesting fresh data.
+  * 
+  *  Behavior:
+  * - For **simple** products: updates `WISHLIST_CONFIG.is_added` and triggers
+  *   a template re-render via `renderTemplate(product_id)`.
+  * 
+  * - For **variable** products: updates `WISHLIST_CONFIG.added_ids` with an
+  *   integer array of variation IDs currently in the wishlist.
+  * 
+  * Side effects:
+  * - Mutates the global `WISHLIST_CONFIG` object.
+  * - May update the DOM (simple products) by re-rendering the template.
+  * 
+  * Network:
+  * - POSTs to `WISHLIST_CONFIG.url` (admin-ajax) with action `rgn_customer_wishlist_get_data`.
+  * - Intended to bypass caches; server should send no-cache headers. The client
+  *   may also set `cache: 'no-store'` to avoid browser-level caching.
+  * 
+  *  Errors:
+ * - On failure, logs a concise error to the console; no exceptions are thrown.
+ * 
+ * @async
+ * @returns {Promise<void>} Resolves after state hydration and any DOM updates.
+  */
+  async init() {
+    try {
+      const fd = new FormData()
+      fd.append('action', 'rgn_customer_wishlist_get_data')
+      fd.append('security', WISHLIST_CONFIG.nonce.get)
+      fd.append('product-id', WISHLIST_CONFIG.product_id)
+      const request = await fetch(WISHLIST_CONFIG.url, {
+        method: 'POST',
+        body: fd,
+        cache: 'no-store'
+      })
+      const response = await request.json()
+      if (response.success) {
+        if (WISHLIST_CONFIG.product_type === 'simple') {
+          WISHLIST_CONFIG.is_added = response.data
+          this.renderTemplate(WISHLIST_CONFIG.product_id)
+        }
+        if (WISHLIST_CONFIG.product_type === 'variable') {
+          WISHLIST_CONFIG.added_ids = response.data.map((d) => parseInt(d))
+        }
+      }
+      console.log(WISHLIST_CONFIG)
+    } catch (error) {
+      console.error('Failed to fetch single product data')
+    }
+  }
 }
 
 
@@ -249,10 +305,9 @@ class WishlistSingleProduct {
 // Instantiate using the root element id (no leading '#')
 const wishlist = new WishlistSingleProduct('rgn-wishlist-single-product')
 
-// For simple products, we can render immediately on page load
-if (wishlist.productType === 'simple') {
-  wishlist.renderTemplate(wishlist.productID)
-}
+// Trigger on page load
+wishlist.init()
+
 
 // WooCommerce variation lifecycle events (jQuery-based)
 jQuery(($) => {
