@@ -276,11 +276,11 @@ class WishlistProductPage
    * @since 1.0.0
    * @return "yes"|"no"
    */
-  private function isAdded()
+  public function isAdded(int $productID)
   {
     $wishlist = new WishlistModel();
     $identifier = wishListIdentifier();
-    $isAdded =  $wishlist->isProductInWishlist(get_the_ID(), $identifier);
+    $isAdded =  $wishlist->isProductInWishlist($productID, $identifier);
     if (empty($isAdded)) {
       return 'no';
     }
@@ -302,18 +302,20 @@ class WishlistProductPage
    */
   public function assets()
   {
+    $path = RGN_CUSTOMER_WISHLIST_PATH . 'assets/js/rgn-customer-wishlist-single-product.js';
     if (is_product()) {
-      wp_enqueue_script('rgn-customer-wishlist-petite-vue', RGN_CUSTOMER_WISHLIST_URL . 'libraries/petite-vue.iife.js', ['jquery'], RGN_CUSTOMER_WISHLIST_VERSION, true);
-      wp_enqueue_script('rgn-customer-wishlist-single-product', RGN_CUSTOMER_WISHLIST_URL . 'assets/js/rgn-customer-wishlist-single-product.js', ['jquery', 'wc-add-to-cart-variation', 'rgn-customer-wishlist-petite-vue'], RGN_CUSTOMER_WISHLIST_VERSION, true);
+      wp_enqueue_script('rgn-customer-wishlist-single-product', RGN_CUSTOMER_WISHLIST_URL . 'assets/js/rgn-customer-wishlist-single-product.js', ['jquery', 'wc-add-to-cart-variation',], filemtime($path), true);
+
       wp_localize_script('rgn-customer-wishlist-single-product', 'rgn_wishlist_single_product', [
         'url' => admin_url('admin-ajax.php'),
         'nonce' => [
           'add' => wp_create_nonce('rgn_add_customer_wishlist_security'),
+          'get' => wp_create_nonce('rgn_get_customer_wishlist_security'),
         ],
         'product_id' => get_the_ID(),
         'added_ids' => $this->getAddedVariationIDs(get_the_ID()),
         'product_type' => $this->getProductType(),
-        'is_added' => $this->isAdded()
+        'is_added' => $this->isAdded(get_the_ID())
       ]);
 
       wp_register_style('rgn-customer-wishlist-inline', false, [], RGN_CUSTOMER_WISHLIST_VERSION);
