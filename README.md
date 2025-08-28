@@ -1,5 +1,5 @@
 
-![Logo](http://reagandev.com/wp-content/uploads/2025/08/screenshot-sample.png)
+![RGN Customer Wishlist Screenshot](http://reagandev.com/wp-content/uploads/2025/08/screenshot-sample-wide-3.png)
 
 
 # RGN Customer Wishlist
