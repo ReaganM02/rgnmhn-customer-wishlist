@@ -1,5 +1,8 @@
 <?php
 // Exit if accessed directly.
+
+use Src\ProductOptions;
+
 if (!defined('ABSPATH')) {
   exit;
 }
@@ -184,8 +187,8 @@ function wishListIdentifier()
     if (empty($token)) {
       $token = wp_generate_uuid4();
 
-      $setting = get_option(RGN_CUSTOMER_WISHLIST_SETTINGS, []);
-      $days = !empty($setting) ? $setting['number-of-days-to-store-cookie'] : 30;
+
+      $days = ProductOptions::getGuestUserExpiryDate();
       wc_setcookie(RGN_WISHLIST_COOKIE, $token, time() + (int) $days * DAY_IN_SECONDS);
     }
     return [
