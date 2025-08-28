@@ -48,4 +48,3 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links)
 add_action('plugins_loaded', [InitializePlugin::class, 'run']);
 register_activation_hook(__FILE__, [PluginAction::class, 'activate']);
 register_deactivation_hook(__FILE__, [PluginAction::class, 'deactivate']);
-register_uninstall_hook(__FILE__, [PluginAction::class, 'uninstall']);

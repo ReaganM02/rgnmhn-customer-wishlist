@@ -172,19 +172,4 @@ class PluginAction
 
     dbDelta($sql);
   }
-
-  public static function uninstall()
-  {
-    if (GeneralSettingOptions::allowDeleteAllDataOnUninstall() !== 'yes') {
-      return;
-    }
-
-    delete_option(GeneralSettingOptions::optionKey());
-    delete_option(MyAccountOptions::optionKey());
-    delete_option(ProductOptions::optionKey());
-
-    global $wpdb;
-    $tableName = $wpdb->prefix . RGN_CUSTOMER_WISHLIST_TABLE_NAME;
-    $wpdb->query("DROP TABLE IF EXISTS `{$tableName}`");
-  }
 }
