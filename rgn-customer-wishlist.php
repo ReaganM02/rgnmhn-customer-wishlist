@@ -46,3 +46,4 @@ require_once RGN_CUSTOMER_WISHLIST_PATH . 'includes/helpers.php';
 add_action('plugins_loaded', [InitializePlugin::class, 'run']);
 register_activation_hook(__FILE__, [PluginAction::class, 'activate']);
 register_deactivation_hook(__FILE__, [PluginAction::class, 'deactivate']);
+register_uninstall_hook(__FILE__, [PluginAction::class, 'uninstall']);
