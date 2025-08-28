@@ -8,7 +8,7 @@ Give your customers the ability to save products to a personalized wishlist. Ful
 
 ## Features
 
-- *Guest Wishlist Support* – Visitors can save products to their wishlist without creating an account.
+- **Guest Wishlist Support** – Visitors can save products to their wishlist without creating an account.
 - *Customizable Icons* – Choose from different icons or upload your own.
 - *Flexible Label Texts* – Easily edit and personalize button or link text.
 - *Flexible Placement* – Display the wishlist button in multiple positions or use a shortcode anywhere.
