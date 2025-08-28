@@ -302,9 +302,9 @@ class WishlistProductPage
    */
   public function assets()
   {
-    $path = RGN_CUSTOMER_WISHLIST_PATH . 'assets/js/rgn-customer-wishlist-single-product.js';
+    // $path = RGN_CUSTOMER_WISHLIST_PATH . 'assets/js/rgn-customer-wishlist-single-product.js';
     if (is_product()) {
-      wp_enqueue_script('rgn-customer-wishlist-single-product', RGN_CUSTOMER_WISHLIST_URL . 'assets/js/rgn-customer-wishlist-single-product.js', ['jquery', 'wc-add-to-cart-variation',], filemtime($path), true);
+      wp_enqueue_script('rgn-customer-wishlist-single-product', RGN_CUSTOMER_WISHLIST_URL . 'assets/js/rgn-customer-wishlist-single-product.js', ['jquery', 'wc-add-to-cart-variation',], RGN_CUSTOMER_WISHLIST_VERSION, true);
 
       wp_localize_script('rgn-customer-wishlist-single-product', 'rgn_wishlist_single_product', [
         'url' => admin_url('admin-ajax.php'),

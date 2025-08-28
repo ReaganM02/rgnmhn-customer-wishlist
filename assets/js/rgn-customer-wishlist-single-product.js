@@ -269,7 +269,6 @@ class WishlistSingleProduct {
  * @returns {Promise<void>} Resolves after state hydration and any DOM updates.
   */
   async init() {
-    console.log('updated')
     try {
       const fd = new FormData()
       fd.append('action', 'rgn_customer_wishlist_get_data')
@@ -290,7 +289,6 @@ class WishlistSingleProduct {
           WISHLIST_CONFIG.added_ids = response.data.map((d) => parseInt(d))
         }
       }
-      console.log(WISHLIST_CONFIG)
     } catch (error) {
       console.error('Failed to fetch single product data')
     }
