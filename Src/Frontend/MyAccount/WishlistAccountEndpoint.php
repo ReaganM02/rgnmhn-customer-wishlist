@@ -1,5 +1,20 @@
 <?php
 
+/**
+ * WishlistAccountEndpoint
+ *
+ * Adds a custom “Wishlist” endpoint to the WooCommerce My Account area.
+ * - Registers the endpoint (based on the user-configurable slug).
+ * - Inserts a new menu item in the My Account navigation.
+ * - Renders the Wishlist page content (empty state or table list).
+ * - Enqueues styles/scripts only when on the endpoint page.
+ *
+ *
+ * @package Src\Frontend\MyAccount
+ * @since   1.0.0
+ */
+
+
 namespace Src\Frontend\MyAccount;
 
 use Src\Models\WishlistModel;
@@ -12,37 +27,78 @@ if (!defined('ABSPATH')) {
 
 class WishlistAccountEndpoint
 {
+  /**
+   * User-configured endpoint slug (e.g., 'wishlist').
+   *
+   * @var string
+   */
   private $slug;
+
+  /**
+   * Constructor.
+   *
+   * Initializes the endpoint slug and registers hooks.
+   *
+   * @return void
+   */
   public function __construct()
   {
-    $this->slug = MyAccountOptions::getSlug();
+    // 
+    $this->slug = MyAccountOptions::getSlug(); // Expecting a sanitized slug.
     $this->hooks();
   }
 
+
+  /**
+   * Register WordPress/WooCommerce hooks for:
+   * - Endpoint registration
+   * - Asset enqueueing
+   * - Menu injection
+   * - Query var registration
+   * - Endpoint content callback
+   *
+   * @return void
+   */
   public function hooks()
   {
     add_rewrite_endpoint($this->slug, EP_ROOT | EP_PAGES);
 
+    // Only enqueue front-end assets when appropriate.
     add_action('wp_enqueue_scripts', [$this, 'assets']);
 
-    // Register my account slug based on the give user settings
+    // Register the menu item in My Account navigation (late priority to place before logout).
     add_action('woocommerce_account_menu_items', [$this, 'addNewMenu'], 99, 1);
 
+    // Add our endpoint to WooCommerce query vars.
     add_action('woocommerce_get_query_vars', [$this, 'addQueryVar']);
 
+    // Render page content when WooCommerce resolves this endpoint.
     add_action('woocommerce_account_' . $this->slug . '_endpoint', [$this, 'pageContent']);
 
-
+    // Internal hook: outputs the wishlist markup (used inside templates).
     add_action('rgn_wishlist_my_account_content', [$this, 'wishlistContent']);
   }
 
+  /**
+   * Register our endpoint slug as a WooCommerce query var.
+   *
+   * @param  array $vars Existing query vars.
+   * @return array        Modified query vars including our slug.
+   */
   public function addQueryVar(array $vars)
   {
     $vars[$this->slug] = $this->slug;
     return $vars;
   }
 
-  public function addNewMenu($items)
+
+  /**
+   * Insert the “Wishlist” item in My Account navigation (before Logout).
+   *
+   * @param  array $items Key/value of endpoint => label.
+   * @return array
+   */
+  public function addNewMenu(array $items)
   {
     $title = MyAccountOptions::getMenuTitle();
 
@@ -54,6 +110,11 @@ class WishlistAccountEndpoint
     return $items;
   }
 
+  /**
+   * Emits the wishlist content (empty state or table) into the template.
+   *
+   * @return void
+   */
   public function wishlistContent()
   {
     $wishlist = new WishlistModel();
@@ -73,18 +134,24 @@ class WishlistAccountEndpoint
     }
   }
 
+  /**
+   * Renders the outer wrapper template for the endpoint page.
+   * The template should call `do_action('rgn_wishlist_my_account_content')`
+   * where the inner content should appear.
+   *
+   * @return void
+   */
   public function pageContent()
   {
     self::renderTemplateOnce('my-account/wishlist.php');
   }
 
   /**
+  /**
    * Require a template file and make $data available in local scope.
    *
-   *
-   * @since 1.0.0
-   * @param string               $path Relative path under plugin `templates/`.
-   * @param array<string,mixed>  $data Variables to extract into template scope.
+   * @param  string              $path Relative path under plugin `templates/`.
+   * @param  array<string,mixed> $data Variables to extract into template scope.
    * @return void
    */
   private static function renderTemplateOnce(string $path, $data = [])
@@ -92,11 +159,27 @@ class WishlistAccountEndpoint
     require_once RGN_CUSTOMER_WISHLIST_PATH . 'templates/' . $path;
   }
 
+  /**
+   * Enqueue styles/scripts for the endpoint page only.
+   *
+   * Loads:
+   * - CSS: /assets/css/rgn-my-account-wishlist.css
+   * - JS : /assets/js/rgn-customer-wishlist-my-account.js (depends on jQuery & wc-cart-fragments)
+   *
+   * Localizes:
+   * - AJAX endpoint URL
+   * - Nonces for add/remove actions
+   *
+   * @return void
+   */
   public function assets()
   {
     global $wp;
+
+    // Only enqueue when on the My Account page AND our endpoint is present in the URL.
     if (is_account_page() && array_key_exists(MyAccountOptions::getSlug(), $wp->query_vars)) {
 
+      // Ensure WooCommerce cart fragments is available (if registered by WC).
       if (wp_script_is('wc-cart-fragments', 'registered')) {
         wp_enqueue_script('wc-cart-fragments');
       }
@@ -104,6 +187,7 @@ class WishlistAccountEndpoint
       wp_enqueue_style('rgn-my-account-wishlist', RGN_CUSTOMER_WISHLIST_URL . 'assets/css/rgn-my-account-wishlist.css', [], RGN_CUSTOMER_WISHLIST_VERSION);
       wp_enqueue_script('rgn-my-account-wishlist-script', RGN_CUSTOMER_WISHLIST_URL . 'assets/js/rgn-customer-wishlist-my-account.js', ['jquery', 'wc-cart-fragments'], RGN_CUSTOMER_WISHLIST_VERSION, true);
 
+      // Provide AJAX URL and nonces to the script.
       wp_localize_script('rgn-my-account-wishlist-script', 'rgn_wishlist_my_account', [
         'url' => admin_url('admin-ajax.php'),
         'nonces' => [
