@@ -2,7 +2,6 @@
 Author: Reagan Mahinay
 Author URI: https://github.com/ReaganM02
 Contributors: reagandev
-Donate link: https://example.com/
 Tags: woocommerce, wishlist, ecommerce, favorites, save products
 Requires at least: 6.1
 Tested up to: 6.6
