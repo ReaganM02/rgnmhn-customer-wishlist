@@ -1,5 +1,17 @@
 <?php
 
+/**
+ *  FormController: Handles POSTed admin settings for the RGN Customer Wishlist plugin.
+ *
+ * - Registers admin_post actions for each settings form.
+ * - Validates capability + nonces.
+ * - Sanitizes/validates incoming values (whitelist by known keys).
+ * - Persists options and redirects back with a success flag.
+ *
+ * @package   Src\Admin
+ * @since     1.0.0
+ */
+
 namespace Src\Admin;
 
 use Src\GeneralSettingOptions;
@@ -11,20 +23,50 @@ if (!defined('ABSPATH')) {
   exit;
 }
 
+/**
+ * Class FormController
+ *
+ * Wires up admin_post handlers and processes the three settings groups:
+ * - General settings
+ * - My Account settings
+ * - Product settings
+ */
 class FormController
 {
+  /**
+   * Bootstrap hooks on construct.
+   */
   public function __construct()
   {
     $this->hooks();
   }
 
+  /**
+   * Register admin_post actions for handling settings submissions.
+   *
+   * @return void
+   */
   public function hooks()
   {
-    add_action('admin_post_rgn_wishlist_save_settings', [$this, 'handleSaveSettings']);
+    // Product settings submit action.
+    add_action('admin_post_rgn_wishlist_save_settings', [$this, 'handleProductSettings']);
+
+    // My Account settings submit action.
     add_action('admin_post_rgn_wishlist_save_my_account', [$this, 'handleMyAccountSettings']);
+
+    // General settings submit action.
     add_action('admin_post_rgn_wishlist_general_settings', [$this, 'handleGeneralSettings']);
   }
 
+  /**
+   * Handle saving General Settings (e.g., delete-on-uninstall flag).
+   *
+   * Security:
+   * - Capability check: manage_options
+   * - CSRF: check_admin_referer('rgn_wishlist_general_settings')
+   *
+   * @return void
+   */
   public function handleGeneralSettings()
   {
     if (!current_user_can('manage_options')) {
@@ -41,6 +83,19 @@ class FormController
     wp_safe_redirect($redirectURL);
   }
 
+  /**
+   * Handle saving My Account settings.
+   *
+   * Security:
+   * - Capability check: manage_options
+   * - CSRF: check_admin_referer('rgn_wishlist_save_my_account_security')
+   *
+   * Validation/Sanitization:
+   * - Whitelist by keys defined in MyAccountOptions::fields()
+   * - Key-specific sanitization (e.g., slug vs text)
+   *
+   * @return void
+   */
   public function handleMyAccountSettings()
   {
     if (!current_user_can('manage_options')) {
@@ -67,7 +122,20 @@ class FormController
     wp_safe_redirect($redirectURL);
   }
 
-  public function handleSaveSettings()
+  /**
+   * Handle saving Product settings.
+   *
+   * Security:
+   * - Capability check: manage_options
+   * - CSRF: check_admin_referer('rgn_wishlist_save_settings_security')
+   *
+   * Validation/Sanitization:
+   * - Whitelist by keys defined in ProductOptions::fields()
+   * - Per-key sanitization
+   *
+   * @return void
+   */
+  public function handleProductSettings()
   {
     if (!current_user_can('manage_options')) {
       wp_die(__('You do not have sufficient permissions to access this page.', 'rgn-customer-wishlist'));
@@ -91,6 +159,9 @@ class FormController
     wp_safe_redirect($redirectURL);
   }
 
+  /**
+   * Sanitize data
+   */
   private function sanitizeData(string $key)
   {
     if (isset($_POST[$key]) && $_POST[$key] !== '') {
