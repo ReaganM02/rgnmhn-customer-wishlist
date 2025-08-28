@@ -16,13 +16,13 @@ Give your customers the ability to save products to a personalized wishlist. Ful
 - **Full Wishlist Management** – Users can remove items, view their wishlist, or add products (including variations) directly to the cart.  
 - **Translation Ready** – Fully compatible with localization tools and tested with the **Loco Translate** plugin.  
 
-### List of Wishlist Content Page
+#### List of Wishlist Content Page
 ![List of Wishlist Content Page](http://reagandev.com/wp-content/uploads/2025/08/added-list-content.jpg)
 
-### Single Product Page Settings
+#### Single Product Page Settings
 ![Product Settings](http://reagandev.com/wp-content/uploads/2025/08/product-settings.jpg)
 
-### Wishlist Content Page Settings
+#### Wishlist Content Page Settings
 ![My Account Settings](http://reagandev.com/wp-content/uploads/2025/08/my-account-settings.jpg)
 
 ## Available Hooks
@@ -31,10 +31,17 @@ Give your customers the ability to save products to a personalized wishlist. Ful
 
 - `rgn_single_product_wishlist_icon`  
   Easily add your own SVG icon using the filter. Once added, it will automatically appear in the product settings icon list, ready to be selected.
-  
+
   **Parameters:**  
   - `$newIcon` *(array)* – An associative array of available icons. **Key:** Unique identifier (string). **Value:** SVG markup (string).
-  **Return:** *(array)*  - The added svg icon
+  **Return:** *(array)*  - The added svg icon.
+
+- `rgn_wishlist_list_delete_text_btn`
+  Change text label of delete button in wishlist content.
+
+  **Parameters**
+  - `$label` *(string)* - Button label.
+  **Return** *(string)* - New button label
 
 Example Usage
 ```php
