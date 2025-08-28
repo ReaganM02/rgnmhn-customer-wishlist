@@ -32,6 +32,8 @@ define('RGN_WISHLIST_COOKIE', 'rgn_wishlist');
 // Load composer
 require_once RGN_CUSTOMER_WISHLIST_PATH . 'vendor/autoload.php';
 
+// Helpers
+require_once RGN_CUSTOMER_WISHLIST_PATH . 'includes/helpers.php';
 
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links) {
   $settings_url = admin_url('admin.php?page=rgn-customer-wishlist');
@@ -41,7 +43,7 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links)
 });
 
 
-require_once RGN_CUSTOMER_WISHLIST_PATH . 'includes/helpers.php';
+
 
 add_action('plugins_loaded', [InitializePlugin::class, 'run']);
 register_activation_hook(__FILE__, [PluginAction::class, 'activate']);
