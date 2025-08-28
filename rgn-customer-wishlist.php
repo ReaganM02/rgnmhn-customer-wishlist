@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name:       RGN Product Customer Wishlist
+ * Plugin Name:       RGN Customer Wishlist
  * Description:       Give your customers the ability to save products to a personalized wishlist. Fully customizable, lightweight, and optimized for speed. Translation-ready, compatible with tools like Loco Translate.
  * Version:           1.0.0
  * Author:            Reagan Mahinay
@@ -9,8 +9,8 @@
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       rgn-customer-wishlist
- * Requires at least: 5.2
- * Requires PHP: 7.0
+ * Requires at least: 6.1
+ * Requires PHP: 7.4
  * Domain Path:       /languages
  * Requires Plugins: woocommerce
  */
