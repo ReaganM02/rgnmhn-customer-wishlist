@@ -8,7 +8,11 @@ Give your customers the ability to save products to a personalized wishlist. Ful
 
 ## Features
 
-- **Guest Wishlist Support** – Visitors can save products to their wishlist without creating an account.
-- *Customizable Icons* – Choose from different icons or upload your own.
-- *Flexible Label Texts* – Easily edit and personalize button or link text.
-- *Flexible Placement* – Display the wishlist button in multiple positions or use a shortcode anywhere.
+- **Guest Wishlist Support** – Visitors can save products to their wishlist without creating an account.  
+- **Customizable Icons** – Choose from default icons or upload add your own via hooks.  
+- **Flexible Labels & Styles** – Personalize button text and colors to match your store’s design.  
+- **Dynamic Placement** – Display the wishlist button in multiple positions or embed it anywhere using a shortcode.  
+- **Customizable Wishlist Page** – Easily edit the menu title, slug, page title, and empty list message.  
+- **Full Wishlist Management** – Users can remove items, view their wishlist, or add products (including variations) directly to the cart.  
+- **Translation Ready** – Fully compatible with localization tools and tested with the **Loco Translate** plugin.  
+
