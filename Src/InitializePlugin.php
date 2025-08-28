@@ -59,6 +59,9 @@ class InitializePlugin
       if ($option === MyAccountOptions::optionKey()) {
         MyAccountOptions::refresh();
       }
+      if ($option === GeneralSettingOptions::optionKey()) {
+        GeneralSettingOptions::refresh();
+      }
     }, 10, 3);
   }
 }
