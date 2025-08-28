@@ -269,6 +269,7 @@ class WishlistSingleProduct {
  * @returns {Promise<void>} Resolves after state hydration and any DOM updates.
   */
   async init() {
+    console.log('updated')
     try {
       const fd = new FormData()
       fd.append('action', 'rgn_customer_wishlist_get_data')
