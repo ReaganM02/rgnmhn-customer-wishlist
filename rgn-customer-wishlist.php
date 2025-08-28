@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name:       RGN Product Customer Wishlist
- * Description:      Test
+ * Description:       Give your customers the ability to save products to a personalized wishlist. Fully customizable, lightweight, and optimized for speed. Translation-ready, compatible with tools like Loco Translate.
  * Version:           1.0.0
  * Author:            Reagan Mahinay
  * Author URI:        https://github.com/ReaganM02
@@ -27,12 +27,18 @@ define('RGN_CUSTOMER_WISHLIST_VERSION', '1.0.0');
 define('RGN_CUSTOMER_WISHLIST_PATH', plugin_dir_path(__FILE__));
 define('RGN_CUSTOMER_WISHLIST_URL', plugin_dir_url(__FILE__));
 define('RGN_CUSTOMER_WISHLIST_TABLE_NAME', 'rgn_customer_waitlist');
-define('RGN_CUSTOMER_WISHLIST_SETTINGS', 'rgn_customer_wishlist_settings');
-define('RGN_CUSTOMER_WISHLIST_MY_ACCOUNT_SETTINGS', 'rgn_customer_wishlist_my_account_settings');
 define('RGN_WISHLIST_COOKIE', 'rgn_wishlist');
 
 // Load composer
 require_once RGN_CUSTOMER_WISHLIST_PATH . 'vendor/autoload.php';
+
+
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links) {
+  $settings_url = admin_url('admin.php?page=rgn-customer-wishlist');
+  $settings_link = '<a href="' . esc_url($settings_url) . '">' . esc_html__('Settings', 'rgn-customer-wishlist') . '</a>';
+  array_unshift($links, $settings_link);
+  return $links;
+});
 
 
 require_once RGN_CUSTOMER_WISHLIST_PATH . 'includes/helpers.php';
