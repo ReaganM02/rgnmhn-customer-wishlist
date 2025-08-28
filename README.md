@@ -34,14 +34,28 @@ Give your customers the ability to save products to a personalized wishlist. Ful
 
   **Parameters:**  
   - `$newIcon` *(array)* – An associative array of available icons. **Key:** Unique identifier (string). **Value:** SVG markup (string).
-  **Return:** *(array)*  - The added svg icon.
+    **Return:** *(array)*  - The added svg icon.
 
 - `rgn_wishlist_list_delete_text_btn`
   Change text label of delete button in wishlist content.
 
   **Parameters**
   - `$label` *(string)* - Button label.
-  **Return** *(string)* - New button label
+    **Return** *(string)* - New button label.
+
+- `rgn_wishlist_list_view_text_btn`.
+  Change text label of view button in wishlist content.
+
+  **Parameters**
+  - `$label` *(string)* - Button label.
+    **Return** *(string)* - New button label.
+
+- `rgn_wishlist_list_add_to_cart_text_btn`.
+  Change text label of add to cart button in wishlist content.
+
+  **Parameters**
+  - `$label` *(string)* - Button label.
+    **Return** *(string)* - New button label.
 
 Example Usage
 ```php
