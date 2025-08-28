@@ -25,3 +25,21 @@ Give your customers the ability to save products to a personalized wishlist. Ful
 ### Wishlist Content Page Settings
 ![My Account Settings](http://reagandev.com/wp-content/uploads/2025/08/my-account-settings.jpg)
 
+## Available Hooks
+
+### Filters:
+
+- `rgn_single_product_wishlist_icon`  
+  Easily add your own SVG icon using the filter. Once added, it will automatically appear in the product settings icon list, ready to be selected.
+  **Parameters:**  
+  - `$newIcon` *(array)* – An associative array of available icons. **Key:** Unique identifier (string). **Value:** SVG markup (string).
+  **Return:** *(array)*  - The added svg icon
+
+Example Usage
+```php
+add_filter('rgn_single_product_wishlist_icon', function($newIcon) {
+    // NOTE: the 'key' must be unique.
+    $newIcon['unique-key'] = '<svg>...</svg>';
+    return $newIcon;
+}, 10, 1);  
+```
