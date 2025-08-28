@@ -43,6 +43,7 @@ class PluginAction
     self::saveProductSettingsDefault();
     self::saveMyAccountDefaultSettings();
     self::flushMyAccountWishlistEndpoint();
+    self::saveGeneralSettingsOptions();
   }
 
   /**
@@ -124,27 +125,27 @@ class PluginAction
   }
 
   /**
-   * Run on plugin deactivation.
+   * Seed the default value for the "Delete all data on uninstall" setting.
+   * 
+   * - Stores the canonical key from GeneralSettingOptions.
+   * - Sets autoload to 'no' so this flag does not bloat the `alloptions` cache.
+   */
+  private static function saveGeneralSettingsOptions()
+  {
+    add_option(GeneralSettingOptions::optionKey(), 'no', '', 'no');
+  }
+
+  /**
+   * Plugin deactivation callback.
    *
-   * Steps:
-   * 1) Drop the wishlist table, if it exists. (DESTRUCTIVE)
-   * 2) Delete the Product and My Account options.
-   * 3) Flush rewrite rules.
-   *
-   * WARNING: This permanently removes stored wishlist data. If you want
-   * to preserve data between deactivations, remove the DROP TABLE & deletes.
+   * Flushes WordPress rewrite rules to remove any custom rewrite endpoints
+   * (e.g., the My Account wishlist endpoint) that this plugin registered.
    *
    * @return void
    * @since  1.0.0
    */
   public static function deactivate()
   {
-    // global $wpdb;
-    // $tableName = $wpdb->prefix . RGN_CUSTOMER_WISHLIST_TABLE_NAME;
-    // $wpdb->query("DROP TABLE IF EXISTS $tableName");
-
-    // delete_option(RGN_CUSTOMER_WISHLIST_SETTINGS);
-    // delete_option(RGN_CUSTOMER_WISHLIST_MY_ACCOUNT_SETTINGS);
     flush_rewrite_rules();
   }
 
@@ -170,5 +171,20 @@ class PluginAction
     ) $charsetCollate;";
 
     dbDelta($sql);
+  }
+
+  public static function uninstall()
+  {
+    if (GeneralSettingOptions::allowDeleteAllDataOnUninstall() !== 'yes') {
+      return;
+    }
+
+    delete_option(GeneralSettingOptions::optionKey());
+    delete_option(MyAccountOptions::optionKey());
+    delete_option(ProductOptions::optionKey());
+
+    global $wpdb;
+    $tableName = $wpdb->prefix . RGN_CUSTOMER_WISHLIST_TABLE_NAME;
+    $wpdb->query("DROP TABLE IF EXISTS `{$tableName}`");
   }
 }
