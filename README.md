@@ -19,3 +19,6 @@ Give your customers the ability to save products to a personalized wishlist. Ful
 
 ### Single Product Page Settings
 ![Product Settings](http://reagandev.com/wp-content/uploads/2025/08/product-settings.jpg)
+
+### Wishlist Content Page Settings
+![My Account Settings](http://reagandev.com/wp-content/uploads/2025/08/my-account-settings.jpg)
