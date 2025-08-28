@@ -20,13 +20,12 @@ if (!defined('ABSPATH')) {
       <strong><?php esc_html_e('Warning:', 'rgn-customer-wishlist'); ?></strong>
       <?php
       /* translators: 1: opening <strong> tag, 2: closing </strong> tag. */
-      echo wp_kses_post(
-        sprintf(
-          __('If this checkbox is checked, %1$sall saved settings and default values will be permanently deleted%2$s when the plugin is uninstalled.', 'rgn-customer-wishlist'),
-          '<strong>',
-          '</strong>'
-        )
+      $message = __(
+        'If this checkbox is checked, %1$sall saved settings and default values will be permanently deleted%2$s when the plugin is uninstalled.',
+        'rgn-customer-wishlist'
       );
+
+      echo wp_kses_post(sprintf($message, '<strong>', '</strong>'));
       ?>
     </div>
     <input type="hidden" name="action" value="rgn_wishlist_general_settings">
