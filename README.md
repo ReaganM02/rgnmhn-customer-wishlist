@@ -16,3 +16,6 @@ Give your customers the ability to save products to a personalized wishlist. Ful
 - **Full Wishlist Management** – Users can remove items, view their wishlist, or add products (including variations) directly to the cart.  
 - **Translation Ready** – Fully compatible with localization tools and tested with the **Loco Translate** plugin.  
 
+
+### Single Product Page Settings
+![Product Settings](http://reagandev.com/wp-content/uploads/2025/08/product-settings.jpg)
