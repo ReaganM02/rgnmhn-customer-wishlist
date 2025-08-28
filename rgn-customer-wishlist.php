@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name:       RGN Product Customer Wishlist
+ * Plugin Name:       RGN Customer Wishlist
  * Description:       Give your customers the ability to save products to a personalized wishlist. Fully customizable, lightweight, and optimized for speed. Translation-ready, compatible with tools like Loco Translate.
  * Version:           1.0.0
  * Author:            Reagan Mahinay
