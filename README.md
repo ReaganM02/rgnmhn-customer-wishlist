@@ -31,6 +31,7 @@ Give your customers the ability to save products to a personalized wishlist. Ful
 
 - `rgn_single_product_wishlist_icon`  
   Easily add your own SVG icon using the filter. Once added, it will automatically appear in the product settings icon list, ready to be selected.
+  
   **Parameters:**  
   - `$newIcon` *(array)* – An associative array of available icons. **Key:** Unique identifier (string). **Value:** SVG markup (string).
   **Return:** *(array)*  - The added svg icon
