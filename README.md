@@ -34,6 +34,7 @@ Give your customers the ability to save products to a personalized wishlist. Ful
 
   **Parameters:**  
   - `$newIcon` *(array)* – An associative array of available icons. **Key:** Unique identifier (string). **Value:** SVG markup (string).
+  
     **Return:** *(array)*  - The added svg icon.
 
 - `rgn_wishlist_list_delete_text_btn`
@@ -41,6 +42,7 @@ Give your customers the ability to save products to a personalized wishlist. Ful
 
   **Parameters**
   - `$label` *(string)* - Button label.
+
     **Return** *(string)* - New button label.
 
 - `rgn_wishlist_list_view_text_btn`.
@@ -48,6 +50,7 @@ Give your customers the ability to save products to a personalized wishlist. Ful
 
   **Parameters**
   - `$label` *(string)* - Button label.
+
     **Return** *(string)* - New button label.
 
 - `rgn_wishlist_list_add_to_cart_text_btn`.
@@ -55,6 +58,7 @@ Give your customers the ability to save products to a personalized wishlist. Ful
 
   **Parameters**
   - `$label` *(string)* - Button label.
+
     **Return** *(string)* - New button label.
 
 Example Usage
