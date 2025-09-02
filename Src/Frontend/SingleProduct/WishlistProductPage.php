@@ -147,7 +147,7 @@ class WishlistProductPage
    */
   public function getWishlistContent()
   {
-    if (ProductOptions::isGuestUserAllowed() !== 'yes') {
+    if (!is_user_logged_in() && !ProductOptions::isGuestUserAllowed()) {
       return '';
     }
     ob_start();
