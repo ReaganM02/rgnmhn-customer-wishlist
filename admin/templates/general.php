@@ -20,12 +20,6 @@ if (!defined('ABSPATH')) {
     <div class="rgnmhn-bg-yellow-100 rgnmhn-border rgnmhn-border-yellow-300 rgnmhn-rounded rgnmhn-p-2 rgnmhn-mt-10 rgnmhn-text-yellow-600" role="alert">
       <strong><?php esc_html_e('Warning:', 'rgnmhn-customer-wishlist'); ?></strong>
       <?php
-<<<<<<< Updated upstream
-      /* translators: 1: opening <strong> tag, 2: closing </strong> tag. */
-      $message = __(
-        'If this checkbox is checked, %1$sall saved settings and default values will be permanently deleted%2$s when the plugin is uninstalled.',
-        'rgn-customer-wishlist'
-=======
       echo wp_kses_post(
         sprintf(
           /* translators: 1: opening <strong> tag, 2: closing </strong> tag. */
@@ -33,10 +27,7 @@ if (!defined('ABSPATH')) {
           '<strong>',
           '</strong>'
         )
->>>>>>> Stashed changes
       );
-
-      echo wp_kses_post(sprintf($message, '<strong>', '</strong>'));
       ?>
     </div>
     <input type="hidden" name="action" value="rgnmhn_wishlist_general_settings">
