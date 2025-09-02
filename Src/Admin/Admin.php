@@ -173,7 +173,7 @@ class Admin
 
     $paletteColors = array_slice($paletteColors, 0, 6);
 
-    wp_localize_script('rgnmhn-customer-wishlist-script', 'themePalette', $paletteColors);
+    wp_localize_script('rgnmhn-customer-wishlist-script', 'rgnmhn_theme_palette', $paletteColors);
   }
 
   /**

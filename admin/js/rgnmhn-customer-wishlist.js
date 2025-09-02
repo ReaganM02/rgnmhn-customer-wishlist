@@ -1,5 +1,5 @@
 jQuery(($) => {
   $('.rgnmhn-wishlist-color-picker').wpColorPicker({
-    palettes: themePalette
+    palettes: rgnmhn_theme_palette
   });
 })
