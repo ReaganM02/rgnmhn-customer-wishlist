@@ -1,4 +1,4 @@
-=== RGNMHN Simple Customer Wishlist ===
+=== Simple Customer Wishlist by RGNMHN ===
 Author: Reagan Mahinay
 Author URI: https://github.com/ReaganM02
 Contributors: reagandev
