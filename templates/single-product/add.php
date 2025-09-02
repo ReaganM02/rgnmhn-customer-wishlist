@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
   exit;
 }
 ?>
-<template id="rgn-template-add-wishlist">
+<template id="rgnmhn-template-add-wishlist">
   <div>
     <?php
     /**
@@ -16,12 +16,12 @@ if (!defined('ABSPATH')) {
      */
     do_action('rgn_wishlist_single_product_before_button')
     ?>
-    <button class="rgn-add-to-wishlist">
-      <span class="rgn-wishlist-icon">
-        <?php echo sanitizeSvg($data['icon']); ?>
+    <button class="rgnmhn-add-to-wishlist">
+      <span class="rgnmhn-wishlist-icon">
+        <?php echo wp_kses($data['icon'], rgnmhnCustomerWishlistAllowedSVGTag()); ?>
       </span>
       <?php if (!empty($data['label'])): ?>
-        <span class="rgn-add-to-wishlist-label">
+        <span class="rgnmhn-add-to-wishlist-label">
           <?php echo esc_html($data['label']) ?>
         </span>
       <?php endif; ?>

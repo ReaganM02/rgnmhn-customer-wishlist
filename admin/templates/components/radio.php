@@ -19,19 +19,19 @@ if (!defined('ABSPATH')) {
 ?>
 <div class="">
   <div>
-    <label for="<?php echo esc_attr($variables['id']) ?>" class="rgn-text-base rgn-text-zinc-600"><?php echo esc_html($variables['label']) ?></label>
+    <label for="<?php echo esc_attr($variables['id']) ?>" class="rgnmhn-text-base rgnmhn-text-zinc-600"><?php echo esc_html($variables['label']) ?></label>
   </div>
-  <div class="rgn-flex rgn-gap-2">
+  <div class="rgnmhn-flex rgnmhn-gap-2">
     <?php foreach ($variables['options'] as $key => $value): ?>
-      <div class="rgn-shadow rgn-border">
+      <div class="rgnmhn-shadow rgnmhn-border">
         <input
           type="radio"
           name="<?php echo esc_attr($variables['id']) ?>"
           id="<?php echo esc_attr($key) ?>"
-          class="!rgn-hidden"
+          class="!rgnmhn-hidden"
           <?php echo $variables['default'] === $key ? 'checked="checked"' : '' ?>
           value="<?php echo esc_attr($key) ?>" />
-        <label for="<?php echo esc_attr($key) ?>" class="rgn-cursor-pointer rgn-w-8 rgn-block rgn-p-2 peer-checked:rgn-bg-zinc-200"><?php echo sanitizeSvg($value) ?></label>
+        <label for="<?php echo esc_attr($key) ?>" class="rgnmhn-cursor-pointer rgnmhn-w-8 rgnmhn-block rgnmhn-p-2 peer-checked:rgnmhn-bg-zinc-200"><?php echo wp_kses($value, rgnmhnCustomerWishlistAllowedSVGTag()) ?></label>
       </div>
     <?php endforeach; ?>
   </div>

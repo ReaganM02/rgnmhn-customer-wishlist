@@ -17,9 +17,9 @@ if (!defined('ABSPATH')) {
 
 ?>
 <div>
-  <div class="rgn-block">
+  <div class="rgnmhn-block">
     <div>
-      <label for="<?php echo esc_attr($variables['id']) ?>" class="rgn-text-base rgn-text-zinc-600"><?php echo esc_html($variables['label']) ?></label>
+      <label for="<?php echo esc_attr($variables['id']) ?>" class="rgnmhn-text-base rgnmhn-text-zinc-600"><?php echo esc_html($variables['label']) ?></label>
     </div>
     <div>
       <input
@@ -27,7 +27,7 @@ if (!defined('ABSPATH')) {
         id="<?php echo esc_attr($variables['id']) ?>"
         name="<?php echo esc_attr($variables['id']) ?>"
         value="<?php echo esc_attr($variables['value']) ?>"
-        class="rgn-w-full rgn-border !rgn-border-zinc-300 rgn-h-12 !rgn-text-zinc-600 !rgn-bg-zinc-50" />
+        class="rgnmhn-w-full rgnmhn-border !rgnmhn-border-zinc-300 rgnmhn-h-12 !rgnmhn-text-zinc-600 !rgnmhn-bg-zinc-50" />
     </div>
   </div>
 </div>

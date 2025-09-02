@@ -1,0 +1,44 @@
+.rgnmhn-wishlist-wrapper {
+  width: max-content;
+  position: relative;
+  padding: 0;
+}
+
+.rgnmhn-add-to-wishlist {
+  background-color: var(--rgnmhn-wishlist-bg-color);
+  color: var(--rgnmhn-wishlist-text-color);
+  font-size: var(--rgnmhn-wishlist-font-size);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: inherit;
+  border: 0;
+  padding-inline: 10px;
+  padding-block: 5px;
+  cursor:pointer;
+  border-radius: 3px;
+}
+
+.rgnmhn-added-to-wishlist {
+  font-size: var(--rgnmhn-wishlist-font-size);
+  color: var(--rgnmhn-wishlist-bg-color);
+}
+
+.rgnmhn-add-to-wishlist:hover {
+  opacity: 0.9;
+}
+
+.rgnmhn-wishlist-icon {
+  display: grid;
+}
+
+.rgnmhn-wishlist-icon svg {
+  width: var(--rgnmhn-wishlist-svg-size);
+}
+
+
+.rgnmhn-add-to-wishlist.rgnmhn-btn-disabled {
+  opacity: 0.5;
+  user-select: none;
+  cursor: not-allowed;
+}

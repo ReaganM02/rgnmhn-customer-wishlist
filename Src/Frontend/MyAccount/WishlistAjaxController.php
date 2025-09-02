@@ -22,9 +22,11 @@
  */
 
 
-namespace Src\Frontend\MyAccount;
+namespace ReaganMahinay\RGNCustomerWishlist\Frontend\MyAccount;
 
-use Src\Models\WishlistModel;
+use ReaganMahinay\RGNCustomerWishlist\Models\WishlistModel;
+use ReaganMahinay\RGNCustomerWishlist\Frontend\MyAccount\WishlistAccountEndpoint;
+
 use WC_Product_Variation;
 
 // Exit if accessed directly.
@@ -50,29 +52,28 @@ class WishlistAjaxController
   public function hooks()
   {
     // Add a product/variation to the WooCommerce cart.
-    add_action('wp_ajax_rgn_wishlist_add_to_cart', [$this, 'addToCart']);
+    add_action('wp_ajax_rgnmhn_wishlist_add_to_cart', [$this, 'addToCart']);
 
     // Remove an item from the wishlist.
-    add_action('wp_ajax_rgn_wishlist_delete_item', [$this, 'delete']);
+    add_action('wp_ajax_rgnmhn_wishlist_delete_item', [$this, 'delete']);
   }
 
   /**
    * AJAX: Delete an item from the wishlist for the current user.
    *
-   * Requires nonce 'rgn_remove_from_wishlist_security' (sent as 'security').
+   * Requires nonce 'rgnmhn_remove_from_wishlist_security' (sent as 'security').
    *
    * @return void Sends JSON response and exits.
    */
   public function delete()
   {
-    check_ajax_referer('rgn_remove_from_wishlist_security', 'security');
+    check_ajax_referer('rgnmhn_remove_from_wishlist_security', 'security');
 
     // Sanitize incoming product ID.
-    $rawProductID  = isset($_POST['product-id']) ? wp_unslash($_POST['product-id']) : 0;
-    $productID     = absint($rawProductID);
+    $productID = isset($_POST['product-id']) ? absint(wp_unslash($_POST['product-id'])) : 0;
 
     if (!$productID) {
-      wp_send_json_error(__('Invalid product ID.', 'rgn-customer-wishlist'));
+      wp_send_json_error(__('Invalid product ID.', 'rgnmhn-customer-wishlist'));
     }
 
     $wishlist = new WishlistModel();
@@ -80,7 +81,7 @@ class WishlistAjaxController
     $deleted = $wishlist->delete($productID, get_current_user_id());
 
     if (!$deleted) {
-      wp_send_json_error(__('Failed to remove item from wishlist.', 'rgn-customer-wishlist'));
+      wp_send_json_error(__('Failed to remove item from wishlist.', 'rgnmhn-customer-wishlist'));
     }
 
 
@@ -97,30 +98,29 @@ class WishlistAjaxController
   /**
    * AJAX: Add a product or variation to the WooCommerce cart.
    *
-   * Requires nonce 'rgn_add_to_cart_security' (sent as 'security').
+   * Requires nonce 'rgnmhn_add_to_cart_security' (sent as 'security').
    *
    * @return void Sends JSON response and exits.
    */
   public function addToCart()
   {
-    check_ajax_referer('rgn_add_to_cart_security', 'security');
+    check_ajax_referer('rgnmhn_add_to_cart_security', 'security');
 
-    $rawProductID = isset($_POST['product-id']) ? wp_unslash($_POST['product-id']) : 0;
-    $productID     = absint($rawProductID);
+    $productID = isset($_POST['product-id']) ? absint(wp_unslash($_POST['product-id'])) : 0;
 
     if (!$productID) {
-      wp_send_json_error(__('Missing or invalid product.', 'rgn-customer-wishlist'));
+      wp_send_json_error(__('Missing or invalid product.', 'rgnmhn-customer-wishlist'));
     }
 
     $product = wc_get_product($productID);
 
     if (!$product) {
-      wp_send_json_error(__('Product does not exist.', 'rgn-customer-wishlist'));
+      wp_send_json_error(__('Product does not exist.', 'rgnmhn-customer-wishlist'));
     }
 
     // Basic purchasability/stock checks.
     if (!$product->is_purchasable() || (!$product->is_in_stock() && !$product->backorders_allowed())) {
-      wp_send_json_error(__('Product is not purchasable or out of stock.', 'rgn-customer-wishlist'));
+      wp_send_json_error(__('Product is not purchasable or out of stock.', 'rgnmhn-customer-wishlist'));
     }
 
     // Ensure WooCommerce cart object is initialized.
@@ -138,7 +138,7 @@ class WishlistAjaxController
     }
 
     wp_send_json_success([
-      'message'   => __('Added to cart.', 'rgn-customer-wishlist'),
+      'message'   => __('Added to cart.', 'rgnmhn-customer-wishlist'),
       'productID' => $productID,
     ]);
   }

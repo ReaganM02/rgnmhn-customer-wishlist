@@ -1,12 +1,10 @@
 <?php
 
-namespace Src\Admin;
+namespace ReaganMahinay\RGNCustomerWishlist\Admin;
 
-use Src\GeneralSettingOptions;
-use Src\MyAccountOptions;
-use Src\ProductOptions;
-
-
+use ReaganMahinay\RGNCustomerWishlist\GeneralSettingOptions;
+use ReaganMahinay\RGNCustomerWishlist\MyAccountOptions;
+use ReaganMahinay\RGNCustomerWishlist\ProductOptions;
 
 /**
  * Class Admin
@@ -63,10 +61,10 @@ class Admin
   {
     // Main menu (Wishlist)
     $menu = add_menu_page(
-      __('RGN Customer Wishlist', 'rgn-customer-wishlist'),
-      __('Wishlist', 'rgn-customer-wishlist'),
+      __('RGN Customer Wishlist', 'rgnmhn-customer-wishlist'),
+      __('Wishlist', 'rgnmhn-customer-wishlist'),
       'manage_options',
-      'rgn-customer-wishlist',
+      'rgnmhn-customer-wishlist',
       [$this, 'ProductSettingsHTML'],
       'dashicons-heart',
       60
@@ -75,33 +73,33 @@ class Admin
 
     // Submenu: Product Settings
     $submenu = add_submenu_page(
-      'rgn-customer-wishlist',
-      __('Wishlist Product Settings', 'rgn-customer-wishlist'),
-      __('Product Settings', 'rgn-customer-wishlist'),
+      'rgnmhn-customer-wishlist',
+      __('Wishlist Product Settings', 'rgnmhn-customer-wishlist'),
+      __('Product Settings', 'rgnmhn-customer-wishlist'),
       'manage_options',
-      'rgn-customer-wishlist',
+      'rgnmhn-customer-wishlist',
       [$this, 'ProductSettingsHTML']
     );
     add_action("load-$submenu", [$this, 'assets']);
 
     // Submenu: My Account Settings
     $submenu = add_submenu_page(
-      'rgn-customer-wishlist',
-      __('Customer Wishlist My Account Settings', 'rgn-customer-wishlist'),
-      __('My Account', 'rgn-customer-wishlist'),
+      'rgnmhn-customer-wishlist',
+      __('Customer Wishlist My Account Settings', 'rgnmhn-customer-wishlist'),
+      __('My Account', 'rgnmhn-customer-wishlist'),
       'manage_options',
-      'rgn-wishlist-wishlist-my-account',
+      'rgnmhn-wishlist-wishlist-my-account',
       [$this, 'myAccountSettingsHTML']
     );
     add_action("load-$submenu", [$this, 'assets']);
 
     // Submenu: General Settings
     $submenu = add_submenu_page(
-      'rgn-customer-wishlist',
-      __('Customer Wishlist General Settings', 'rgn-customer-wishlist'),
-      __('General Settings', 'rgn-customer-wishlist'),
+      'rgnmhn-customer-wishlist',
+      __('Customer Wishlist General Settings', 'rgnmhn-customer-wishlist'),
+      __('General Settings', 'rgnmhn-customer-wishlist'),
       'manage_options',
-      'rgn-customer-wishlist-general-settings',
+      'rgnmhn-customer-wishlist-general-settings',
       [$this, 'generalSettingsHTML']
     );
     add_action("load-$submenu", [$this, 'assets']);
@@ -118,7 +116,7 @@ class Admin
   public function generalSettingsHTML()
   {
     $settings = GeneralSettingOptions::fields();
-    require_once RGN_CUSTOMER_WISHLIST_PATH . 'admin/templates/general.php';
+    require_once RGNMHN_CUSTOMER_WISHLIST_PATH . 'admin/templates/general.php';
   }
 
   /**
@@ -132,7 +130,7 @@ class Admin
   public function myAccountSettingsHTML()
   {
     $settings = MyAccountOptions::fields();
-    require_once RGN_CUSTOMER_WISHLIST_PATH . 'admin/templates/my-account.php';
+    require_once RGNMHN_CUSTOMER_WISHLIST_PATH . 'admin/templates/my-account.php';
   }
 
   /**
@@ -146,7 +144,7 @@ class Admin
   public function ProductSettingsHTML()
   {
     $settings = ProductOptions::fields();
-    require_once RGN_CUSTOMER_WISHLIST_PATH . 'admin/templates/product-settings.php';
+    require_once RGNMHN_CUSTOMER_WISHLIST_PATH . 'admin/templates/product-settings.php';
   }
 
   /**
@@ -164,8 +162,8 @@ class Admin
     wp_dequeue_style('forms');
     wp_enqueue_style('wp-color-picker');
 
-    wp_enqueue_style('rgn-customer-wishlist', $this->getAssetFile('css', 'rgn-customer-wishlist.css'), [], RGN_CUSTOMER_WISHLIST_VERSION);
-    wp_enqueue_script('rgn-customer-wishlist-script', $this->getAssetFile('js', 'rgn-customer-wishlist.js'), ['wp-color-picker'], RGN_CUSTOMER_WISHLIST_VERSION, true);
+    wp_enqueue_style('rgnmhn-customer-wishlist', $this->getAssetFile('css', 'rgnmhn-customer-wishlist.css'), [], RGNMHN_CUSTOMER_WISHLIST_VERSION);
+    wp_enqueue_script('rgnmhn-customer-wishlist-script', $this->getAssetFile('js', 'rgnmhn-customer-wishlist.js'), ['wp-color-picker'], RGNMHN_CUSTOMER_WISHLIST_VERSION, true);
 
     $themePalette = wp_get_global_settings()['color']['palette']['default'] ?? [];
 
@@ -175,7 +173,7 @@ class Admin
 
     $paletteColors = array_slice($paletteColors, 0, 6);
 
-    wp_localize_script('rgn-customer-wishlist-script', 'themePalette', $paletteColors);
+    wp_localize_script('rgnmhn-customer-wishlist-script', 'themePalette', $paletteColors);
   }
 
   /**
@@ -187,6 +185,6 @@ class Admin
    */
   private function getAssetFile(string $type, string $file)
   {
-    return RGN_CUSTOMER_WISHLIST_URL . 'admin/' . $type . '/' . $file;
+    return RGNMHN_CUSTOMER_WISHLIST_URL . 'admin/' . $type . '/' . $file;
   }
 }

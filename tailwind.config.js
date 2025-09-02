@@ -1,5 +1,5 @@
 module.exports = {
-  prefix: 'rgn-', // <- prefix should be placed **before** `content`
+  prefix: 'rgnmhn-', // <- prefix should be placed **before** `content`
   content: ['./templates/**/*.php', './admin/templates/**/*.php', './includes/*.php'],
   theme: {
     extend: {

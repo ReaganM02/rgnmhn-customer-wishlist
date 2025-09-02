@@ -4,5 +4,5 @@ if (!defined('ABSPATH')) {
   exit;
 }
 ?>
-<div id="rgn-wishlist-single-product">
+<div id="rgnmhn-wishlist-single-product">
 </div>

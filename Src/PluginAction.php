@@ -1,6 +1,10 @@
 <?php
 
-namespace Src;
+namespace ReaganMahinay\RGNCustomerWishlist;
+
+use ReaganMahinay\RGNCustomerWishlist\ProductOptions;
+use ReaganMahinay\RGNCustomerWishlist\MyAccountOptions;
+use ReaganMahinay\RGNCustomerWishlist\GeneralSettingOptions;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -76,19 +80,16 @@ class PluginAction
    *
    * @return void
    * @since  1.0.0
-   * @see    \Src\MyAccountOptions::fields()
    */
   private static function saveMyAccountDefaultSettings()
   {
     $fields = MyAccountOptions::fields();
-    $defaults = [];
-    foreach ($fields as $key => $field) {
-      if ($field['type'] === 'text' || $field['type'] === 'number') {
-        $defaults[sanitize_text_field($key)] = sanitize_text_field($field['value']);
-      }
-    }
+    $sanitizedData = [];
 
-    add_option(MyAccountOptions::optionKey(), $defaults);
+    foreach ($fields as $key => $field) {
+      $sanitizedData[$field['name']] = sanitize_text_field($field['value']);
+    }
+    add_option(MyAccountOptions::optionKey(), $sanitizedData);
   }
 
   /**
@@ -101,7 +102,7 @@ class PluginAction
    *
    * All keys and values are sanitized.
    *
-   * Option key: RGN_CUSTOMER_WISHLIST_SETTINGS
+   * Option key: RGNMHN_CUSTOMER_WISHLIST_SETTINGS
    *
    * @return void
    * @since  1.0.0
@@ -111,17 +112,37 @@ class PluginAction
   {
     $fields = ProductOptions::fields();
 
-    $defaults = [];
+    $sanitizedData = [];
+
     foreach ($fields as $key => $field) {
-      if (isset($field['default'])) {
-        $defaults[sanitize_text_field($key)] = sanitize_text_field($field['default']);
-      } else if ($field['type'] == 'select') {
-        $defaults[sanitize_text_field($key)] = sanitize_text_field($field['selected']);
-      } else {
-        $defaults[sanitize_text_field($key)] = sanitize_text_field($field['value']);
+      $rules = $field['rules'];
+
+      switch ($rules['type']) {
+        case 'bool':
+          $present = $field['checked'] ? 'yes' : 'no';
+          $sanitizedData[$field['name']] = $present;
+          break;
+        case 'init':
+          $sanitizedData[$field['name']] = absint($field['value']);
+          break;
+        case 'color':
+          $sanitizedData[$field['name']] = sanitize_hex_color($field['value']);
+          break;
+        case 'text':
+          if (isset($field['default'])) {
+            $sanitizedData[$field['name']] = sanitize_text_field($field['default']);
+          } else if (isset($field['selected'])) {
+            $sanitizedData[$field['name']] = sanitize_text_field($field['selected']);
+          } else {
+            $sanitizedData[$field['name']]  = sanitize_text_field($field['value']);
+          }
+          break;
+        default:
+          $sanitizedData[$field['name']] = sanitize_text_field($field['value']);
+          break;
       }
     }
-    add_option(ProductOptions::optionKey(), $defaults);
+    add_option(ProductOptions::optionKey(), $sanitizedData);
   }
 
   /**
@@ -153,7 +174,7 @@ class PluginAction
   {
     global $wpdb;
 
-    $tableName = $wpdb->prefix . RGN_CUSTOMER_WISHLIST_TABLE_NAME;
+    $tableName = $wpdb->prefix . RGNMHN_CUSTOMER_WISHLIST_TABLE_NAME;
 
     $charsetCollate = $wpdb->get_charset_collate();
 

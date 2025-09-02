@@ -8,15 +8,14 @@
  * - Sanitizes/validates incoming values (whitelist by known keys).
  * - Persists options and redirects back with a success flag.
  *
- * @package   Src\Admin
  * @since     1.0.0
  */
 
-namespace Src\Admin;
+namespace ReaganMahinay\RGNCustomerWishlist\Admin;
 
-use Src\GeneralSettingOptions;
-use Src\MyAccountOptions;
-use Src\ProductOptions;
+use ReaganMahinay\RGNCustomerWishlist\GeneralSettingOptions;
+use ReaganMahinay\RGNCustomerWishlist\MyAccountOptions;
+use ReaganMahinay\RGNCustomerWishlist\ProductOptions;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -49,13 +48,13 @@ class FormController
   public function hooks()
   {
     // Product settings submit action.
-    add_action('admin_post_rgn_wishlist_save_settings', [$this, 'handleProductSettings']);
+    add_action('admin_post_rgnmhn_wishlist_save_settings', [$this, 'handleProductSettings']);
 
     // My Account settings submit action.
-    add_action('admin_post_rgn_wishlist_save_my_account', [$this, 'handleMyAccountSettings']);
+    add_action('admin_post_rgnmhn_wishlist_save_my_account', [$this, 'handleMyAccountSettings']);
 
     // General settings submit action.
-    add_action('admin_post_rgn_wishlist_general_settings', [$this, 'handleGeneralSettings']);
+    add_action('admin_post_rgnmhn_wishlist_general_settings', [$this, 'handleGeneralSettings']);
   }
 
   /**
@@ -63,17 +62,24 @@ class FormController
    *
    * Security:
    * - Capability check: manage_options
-   * - CSRF: check_admin_referer('rgn_wishlist_general_settings')
+   * - CSRF: check_admin_referer('rgnmhn_wishlist_general_settings')
    *
    * @return void
    */
   public function handleGeneralSettings()
   {
     if (!current_user_can('manage_options')) {
-      wp_die(__('You do not have sufficient permissions to access this page.', 'rgn-customer-wishlist'));
+      wp_die(
+        esc_html__('You do not have sufficient permissions to access this page.', 'rgnmhn-customer-wishlist'),
+        esc_html__('Access denied', 'rgnmhn-customer-wishlist'),
+        array(
+          'response'  => 403,
+          'back_link' => true,
+        )
+      );
     }
 
-    check_admin_referer('rgn_wishlist_general_settings');
+    check_admin_referer('rgnmhn_wishlist_general_settings');
 
     $value = (isset($_POST['remove-data-on-uninstall'])) && ($_POST['remove-data-on-uninstall'] === 'yes') ? 'yes'  : 'no';
 
@@ -88,7 +94,7 @@ class FormController
    *
    * Security:
    * - Capability check: manage_options
-   * - CSRF: check_admin_referer('rgn_wishlist_save_my_account_security')
+   * - CSRF: check_admin_referer('rgnmhn_wishlist_save_my_account_security')
    *
    * Validation/Sanitization:
    * - Whitelist by keys defined in MyAccountOptions::fields()
@@ -99,23 +105,28 @@ class FormController
   public function handleMyAccountSettings()
   {
     if (!current_user_can('manage_options')) {
-      wp_die(__('You do not have sufficient permissions to access this page.', 'rgn-customer-wishlist'));
+      wp_die(
+        esc_html__('You do not have sufficient permissions to access this page.', 'rgnmhn-customer-wishlist'),
+        esc_html__('Access denied', 'rgnmhn-customer-wishlist'),
+        array(
+          'response'  => 403,
+          'back_link' => true,
+        )
+      );
     }
 
-    check_admin_referer('rgn_wishlist_save_my_account_security');
+    check_admin_referer('rgnmhn_wishlist_save_my_account_security');
 
-    $settings = MyAccountOptions::fields();
     $sanitizedData = [];
 
-    foreach ($_POST as $key => $value) {
-      if (array_key_exists($key, $settings)) {
-        if ($key === 'menu-slug') {
-          $sanitizedData[$key] = sanitize_title($_POST[$key]);
-        } else {
-          $sanitizedData[$key] = $this->sanitizeData($key);
-        }
-      }
+    foreach (MyAccountOptions::getKeysAndRules() as $key => $rules) {
+      $raw = filter_input(INPUT_POST, $key, FILTER_UNSAFE_RAW);
+      $value = is_string($raw) ? wp_unslash($raw) : $raw;
+
+      // Since they are all texts, no need to use switch
+      $sanitizedData[$key] = sanitize_text_field($value);
     }
+
     update_option(MyAccountOptions::optionKey(), $sanitizedData);
 
     $redirectURL = add_query_arg('settings-updated', 'true', wp_get_referer());
@@ -127,7 +138,7 @@ class FormController
    *
    * Security:
    * - Capability check: manage_options
-   * - CSRF: check_admin_referer('rgn_wishlist_save_settings_security')
+   * - CSRF: check_admin_referer('rgnmhn_wishlist_save_settings_security')
    *
    * Validation/Sanitization:
    * - Whitelist by keys defined in ProductOptions::fields()
@@ -138,35 +149,53 @@ class FormController
   public function handleProductSettings()
   {
     if (!current_user_can('manage_options')) {
-      wp_die(__('You do not have sufficient permissions to access this page.', 'rgn-customer-wishlist'));
+      wp_die(
+        esc_html__('You do not have sufficient permissions to access this page.', 'rgnmhn-customer-wishlist'),
+        esc_html__('Access denied', 'rgnmhn-customer-wishlist'),
+        array(
+          'response'  => 403,
+          'back_link' => true,
+        )
+      );
     }
 
-    check_admin_referer('rgn_wishlist_save_settings_security');
+    check_admin_referer('rgnmhn_wishlist_save_settings_security');
 
-    $settingsField = ProductOptions::fields();
     $sanitizedData = [];
+    foreach (ProductOptions::getKeysAndRules() as $key => $rules) {
+      $type = $rules['type'];
 
-    $allowGuestUser = isset($_POST['allow-none-logged-in-user']) ? 'yes' : 'no';
-    foreach ($_POST as $key => $value) {
-      if (array_key_exists($key, $settingsField)) {
-        $sanitizedData[$key] = $this->sanitizeData($key);
+      if ($type === 'bool') {
+        $present = filter_input(INPUT_POST, $key, FILTER_DEFAULT) !== null;
+        $sanitizedData[$key] = $present ? 'yes' : 'no';
+        continue;
+      }
+
+      $raw = filter_input(INPUT_POST, $key, FILTER_UNSAFE_RAW);
+
+      $value = is_string($raw) ? wp_unslash($raw) : $raw;
+
+      switch ($type) {
+        case 'int':
+          $n = absint($value);
+          if (isset($rules['min']) && $n < $rules['min']) {
+            $n = $rules['min'];
+          }
+          if (isset($rules['max']) && $n > $rules['max']) {
+            $n = $rules['max'];
+          }
+          $sanitizedData[$key] = $n;
+          break;
+        case 'text':
+          $sanitizedData[$key] = sanitize_text_field($value);
+          break;
+        default:
+          $sanitizedData[$key] = sanitize_text_field($value);
+          break;
       }
     }
-
-    $sanitizedData['allow-none-logged-in-user'] = $allowGuestUser;
     update_option(ProductOptions::optionKey(), $sanitizedData);
     $redirectURL = add_query_arg('settings-updated', 'true', wp_get_referer());
     wp_safe_redirect($redirectURL);
-  }
-
-  /**
-   * Sanitize data
-   */
-  private function sanitizeData(string $key)
-  {
-    if (isset($_POST[$key]) && $_POST[$key] !== '') {
-      return sanitize_text_field($_POST[$key]);
-    }
-    return '';
   }
 }

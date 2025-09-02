@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Src;
+namespace ReaganMahinay\RGNCustomerWishlist;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -41,7 +41,7 @@ class ProductOptions
    *  Option key for storing this feature's settings in WordPress.
    *  @since 1.0.0
    */
-  private const KEY = 'rgn_customer_wishlist_settings';
+  private const KEY = 'rgnmhn_customer_wishlist_settings';
 
   /**
    * Returns the canonical option key used to persist settings in wp_options.
@@ -96,8 +96,8 @@ class ProductOptions
 
   /**
    * Check whether guest users are allowed to add wishlist items.
-   *
-   * Option key: `allow-none-logged-in-user`
+   *  
+   * Option key: `allow-non-logged-in-user`
    *
    * @since 1.0.0
    * @return bool True if allowed, false otherwise.
@@ -105,9 +105,16 @@ class ProductOptions
   public static function isGuestUserAllowed()
   {
     self::getOptions();
-    if (!self::emptyOption() && self::has('allow-none-logged-in-user') && self::$option['allow-none-logged-in-user'] === 'yes') {
+
+    // If not settings is saved, default it to true.
+    if (self::emptyOption()) {
       return true;
     }
+
+    if (!self::emptyOption() && self::has('allow-non-logged-in-user') && self::$option['allow-non-logged-in-user'] === 'yes') {
+      return true;
+    }
+
     return false;
   }
 
@@ -291,6 +298,15 @@ class ProductOptions
     return 'woocommerce_after_add_to_cart_form';
   }
 
+  public static function getKeysAndRules()
+  {
+    $output = [];
+    foreach (self::fields() as $field) {
+      $output[$field['name']] = $field['rules'];
+    }
+    return $output;
+  }
+
   /**
    * Define the fields used for product wishlist settings.
    *
@@ -298,98 +314,108 @@ class ProductOptions
    * label, description, value, and options.
    *
    * @since 1.0.0
-   * @return array<string, array<string, mixed>> Array of field definitions.
    */
   public static function fields()
   {
     return [
-      'allow-none-logged-in-user' => [
-        'id'    => 'allow-none-logged-in-user',
-        'name'    => 'allow-none-logged-in-user',
-        'label'   => __('Allow guest users to add wishlist', 'rgn-customer-wishlist'),
+      'allow-non-logged-in-user' => [
+        'id'    => 'allow-non-logged-in-user',
+        'name'    => 'allow-non-logged-in-user',
+        'label'   => __('Allow guest users to add wishlist', 'rgnmhn-customer-wishlist'),
         'type'    => 'switch',
         'desc'    => '',
         'value'   => 'yes',
         'checked' => self::isGuestUserAllowed(),
+        'rules' => ['type' => 'bool']
       ],
       'number-of-days-to-store-cookie' => [
         'id'  => 'number-of-days-to-store-cookie',
         'name'  => 'number-of-days-to-store-cookie',
-        'label' => __('For guest customers, How long to keep your wishlist (in days)', 'rgn-customer-wishlist'),
+        'label' => __('For guest customers, How long to keep your wishlist (in days)', 'rgnmhn-customer-wishlist'),
         'type'  => 'number',
         'desc'  => '',
         'value' => self::getGuestUserExpiryDate(),
+        'rules' => ['type' => 'int', 'min' => 1, 'max' => 30]
       ],
       'wishlist-icon' => [
         'id' => 'wishlist-icon',
         'name' => 'wishlist-icon',
-        'label'   => __('Select Wishlist Icon', 'rgn-customer-wishlist'),
+        'label'   => __('Select Wishlist Icon', 'rgnmhn-customer-wishlist'),
         'type'    => 'radio',
-        'options' => getIcons(),
+        'options' => rgnmhnCustomerWishlistGetIcons(),
         'default' => self::getIcon(),
+        'rules' => ['type' => 'text']
       ],
       'wishlist-icon-size' => [
         'id' => 'wishlist-icon-size',
         'name' => 'wishlist-icon-size',
-        'label' => __('Icon size', 'rgn-customer-wishlist'),
+        'label' => __('Icon size', 'rgnmhn-customer-wishlist'),
         'type'  => 'number',
         'value' => self::getIconSize(),
+        'rules' => ['type' => 'int', 'min' => 1, 'max' => 100]
       ],
       'font-size' => [
         'id' => 'font-size',
         'name' => 'font-size',
-        'label' => __('Font size', 'rgn-customer-wishlist'),
+        'label' => __('Font size', 'rgnmhn-customer-wishlist'),
         'type'  => 'number',
         'value' => self::getFontSize(),
+        'rules' => ['type' => 'int', 'min' => 1, 'max' => 99]
       ],
       'wishlist-label' => [
         'id' => 'wishlist-label',
         'name' => 'wishlist-label',
         'type' => 'text',
-        'label' => __('Wishlist Label', 'rgn-customer-wishlist'),
-        'value' =>  self::getWishlistLabel()
+        'label' => __('Wishlist Label', 'rgnmhn-customer-wishlist'),
+        'value' =>  self::getWishlistLabel(),
+        'rules' => ['type' => 'text']
       ],
       'added-to-wishlist-label' => [
         'id' => 'added-to-wishlist-label',
         'name' => 'added-to-wishlist-label',
         'type' => 'text',
         'value' => self::getAddedToWishlistLabel(),
-        'label' => __('Wishlist is Added Label', 'rgn-customer-wishlist'),
+        'label' => __('Wishlist is Added Label', 'rgnmhn-customer-wishlist'),
+        'rules' => ['type' => 'text']
       ],
       'background-color' => [
         'id' => 'background-color',
         'name' => 'background-color',
-        'label' => __('Background color', 'rgn-customer-wishlist'),
+        'label' => __('Background color', 'rgnmhn-customer-wishlist'),
         'type'  => 'color',
         'value' => self::getBackgroundColor(),
+        'rules' => ['type' => 'color']
       ],
       'text-color' => [
         'id' => 'text-color',
         'name' => 'text-color',
-        'label' => __('Text Color', 'rgn-customer-wishlist'),
+        'label' => __('Text Color', 'rgnmhn-customer-wishlist'),
         'type'  => 'color',
         'value' => self::getTextColor(),
+        'rules' => ['type' => 'color']
       ],
       'browse-wishlist-color' => [
         'id' => 'browse-wishlist-color',
         'name' => 'browse-wishlist-color',
-        'label' => __('Browse Wishlist Color', 'rgn-customer-wishlist'),
+        'label' => __('Browse Wishlist Color', 'rgnmhn-customer-wishlist'),
         'type'  => 'color',
         'value' => self::getBrowseWishlistColor(),
+        'rules' => ['type' => 'color']
       ],
       'wishlist-placement' => [
         'id' => 'wishlist-placement',
         'name' => 'wishlist-placement',
         'type' => 'select',
-        'label' => __('Select Content Placement', 'rgn-customer-wishlist'),
+        'label' => __('Select Content Placement', 'rgnmhn-customer-wishlist'),
         'options' => [
-          'woocommerce_after_add_to_cart_form' => __('After add to cart form', 'rgn-customer-wishlist'),
-          'woocommerce_before_add_to_cart_form' => __('Before add to cart form', 'rgn-customer-wishlist'),
-          'woocommerce_before_add_to_cart_quantity' => __('Before add to cart quantity', 'rgn-customer-wishlist'),
-          'woocommerce_after_single_product_summary' => __('After single product summary', 'rgn-customer-wishlist'),
-          'use_shortcode' => __('Use shortcode', 'rgn-customer-wishlist')
+          'woocommerce_after_add_to_cart_form' => __('After add to cart form', 'rgnmhn-customer-wishlist'),
+          'woocommerce_before_add_to_cart_form' => __('Before add to cart form', 'rgnmhn-customer-wishlist'),
+          'woocommerce_before_add_to_cart_quantity' => __('Before add to cart quantity', 'rgnmhn-customer-wishlist'),
+          'woocommerce_after_single_product_summary' => __('After single product summary', 'rgnmhn-customer-wishlist'),
+          'use_shortcode' => __('Use shortcode', 'rgnmhn-customer-wishlist')
         ],
-        'selected' => self::getSelectedPlacementContent()
+        'selected' => self::getSelectedPlacementContent(),
+        'rules' => ['type' => 'text']
       ]
     ];
   }

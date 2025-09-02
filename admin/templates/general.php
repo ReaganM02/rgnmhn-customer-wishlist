@@ -4,36 +4,47 @@ if (!defined('ABSPATH')) {
   exit;
 }
 ?>
-<form class="rgn-m-6 rgn-w-1/2" action="<?php echo esc_url(admin_url('admin-post.php')) ?>" method="post">
-  <section class="rgn-p-4 rgn-bg-white rgn-shadow-md rgn-rounded">
-    <h1 class="rgn-text-zinc-700 rgn-font-bold rgn-uppercase rgn-tracking-wide rgn-text-lg">
-      <?php echo __('General Settings', 'rgn-customer-wishlist'); ?>
+<form class="rgnmhn-m-6 rgnmhn-w-1/2" action="<?php echo esc_url(admin_url('admin-post.php')) ?>" method="post">
+  <section class="rgnmhn-p-4 rgnmhn-bg-white rgnmhn-shadow-md rgnmhn-rounded">
+    <h1 class="rgnmhn-text-zinc-700 rgnmhn-font-bold rgnmhn-uppercase rgnmhn-tracking-wide rgnmhn-text-lg">
+      <?php echo esc_html(__('General Settings', 'rgnmhn-customer-wishlist')); ?>
     </h1>
-    <div class="rgn-block rgn-space-y-4 rgn-mt-6">
+    <div class="rgnmhn-block rgnmhn-space-y-4 rgnmhn-mt-6">
       <?php
       foreach ($settings as $setting) {
-        renderComponent($setting['type'] . '.php', $setting);
+        rgnmhnCustomerWishlistRenderComponent($setting['type'] . '.php', $setting);
       }
       ?>
     </div>
-    <div class="rgn-bg-yellow-100 rgn-border rgn-border-yellow-300 rgn-rounded rgn-p-2 rgn-mt-10 rgn-text-yellow-600" role="alert">
-      <strong><?php esc_html_e('Warning:', 'rgn-customer-wishlist'); ?></strong>
+
+    <div class="rgnmhn-bg-yellow-100 rgnmhn-border rgnmhn-border-yellow-300 rgnmhn-rounded rgnmhn-p-2 rgnmhn-mt-10 rgnmhn-text-yellow-600" role="alert">
+      <strong><?php esc_html_e('Warning:', 'rgnmhn-customer-wishlist'); ?></strong>
       <?php
+<<<<<<< Updated upstream
       /* translators: 1: opening <strong> tag, 2: closing </strong> tag. */
       $message = __(
         'If this checkbox is checked, %1$sall saved settings and default values will be permanently deleted%2$s when the plugin is uninstalled.',
         'rgn-customer-wishlist'
+=======
+      echo wp_kses_post(
+        sprintf(
+          /* translators: 1: opening <strong> tag, 2: closing </strong> tag. */
+          __('If this checkbox is checked, %1$sall saved settings and default values will be permanently deleted%2$s when the plugin is uninstalled.', 'rgnmhn-customer-wishlist'),
+          '<strong>',
+          '</strong>'
+        )
+>>>>>>> Stashed changes
       );
 
       echo wp_kses_post(sprintf($message, '<strong>', '</strong>'));
       ?>
     </div>
-    <input type="hidden" name="action" value="rgn_wishlist_general_settings">
-    <?php wp_nonce_field('rgn_wishlist_general_settings'); ?>
-    <div class="rgn-mt-10 rgn-mb-4">
-      <?php renderComponent('success.php'); ?>
-      <button class="rgn-bg-blue-600 rgn-text-white rgn-px-10 rgn-py-4 rgn-rounded hover:rgn-bg-blue-700 rgn-text-base rgn-uppercase rgn-font-bold rgn-tracking-wide">
-        <?php echo __('Save Settings', 'rgn-customer-wishlist') ?>
+    <input type="hidden" name="action" value="rgnmhn_wishlist_general_settings">
+    <?php wp_nonce_field('rgnmhn_wishlist_general_settings'); ?>
+    <div class="rgnmhn-mt-10 rgnmhn-mb-4">
+      <?php rgnmhnCustomerWishlistRenderComponent('success.php'); ?>
+      <button class="rgnmhn-bg-blue-600 rgnmhn-text-white rgnmhn-px-10 rgnmhn-py-4 rgnmhn-rounded hover:rgnmhn-bg-blue-700 rgnmhn-text-base rgnmhn-uppercase rgnmhn-font-bold rgnmhn-tracking-wide">
+        <?php echo esc_html(__('Save Settings', 'rgnmhn-customer-wishlist')) ?>
       </button>
     </div>
   </section>

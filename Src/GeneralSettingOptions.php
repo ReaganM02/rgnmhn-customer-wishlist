@@ -4,7 +4,7 @@
  * GeneralSettingOptions
  *
  * Manages the single “delete all data on uninstall” setting for the
- * RGN Customer Wishlist plugin. Provides:
+ * rgnmhn Customer Wishlist plugin. Provides:
  * - A canonical option key
  * - A cached getter (with strict normalization to 'yes'/'no')
  * - A field config array for rendering the admin UI
@@ -15,7 +15,7 @@
  * @since   1.0.0
  */
 
-namespace Src;
+namespace ReaganMahinay\RGNCustomerWishlist;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -25,7 +25,7 @@ if (!defined('ABSPATH')) {
 class GeneralSettingOptions
 {
   /** @var string Option key stored in wp_options */
-  private const KEY = 'rgn_customer_wishlist_delete_all_data_on_uninstall';
+  private const KEY = 'rgnmhn_customer_wishlist_delete_all_data_on_uninstall';
 
   /** @var 'yes'|'no' Default value when option is missing/invalid */
   private const DEFAULT = 'no';
@@ -127,7 +127,7 @@ class GeneralSettingOptions
         'name' => 'remove-data-on-uninstall',
         'type' => 'switch',
         'value' => 'yes',
-        'label' => __('Delete all settings on uninstall', 'rgn-customer-wishlist'),
+        'label' => __('Delete all settings on uninstall', 'rgnmhn-customer-wishlist'),
         'checked' => self::getOption() === 'yes' ? true : false
       ]
     ];

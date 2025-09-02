@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Models;
+namespace ReaganMahinay\RGNCustomerWishlist\Models;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -32,7 +32,7 @@ class WishlistModel
   {
     global $wpdb;
     $this->db = $wpdb;
-    $this->tableName = $this->db->prefix . RGN_CUSTOMER_WISHLIST_TABLE_NAME;
+    $this->tableName = $this->db->prefix . RGNMHN_CUSTOMER_WISHLIST_TABLE_NAME;
   }
 
   /**

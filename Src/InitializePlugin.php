@@ -12,15 +12,15 @@
  * @since   1.0.0
  */
 
-namespace Src;
+namespace ReaganMahinay\RGNCustomerWishlist;
 
-use Src\Admin\Admin;
-use Src\Admin\FormController;
-use Src\Frontend\Actions;
-use Src\Frontend\MyAccount\WishlistAccountEndpoint;
-use Src\Frontend\MyAccount\WishlistAjaxController;
-use Src\Frontend\SingleProduct\WishlistProductPage;
-use Src\Frontend\SingleProduct\WishlistProductPageController;
+use ReaganMahinay\RGNCustomerWishlist\Admin\Admin;
+use ReaganMahinay\RGNCustomerWishlist\Admin\FormController;
+use ReaganMahinay\RGNCustomerWishlist\Frontend\Actions;
+use ReaganMahinay\RGNCustomerWishlist\Frontend\MyAccount\WishlistAccountEndpoint;
+use ReaganMahinay\RGNCustomerWishlist\Frontend\MyAccount\WishlistAjaxController;
+use ReaganMahinay\RGNCustomerWishlist\Frontend\SingleProduct\WishlistProductPage;
+use ReaganMahinay\RGNCustomerWishlist\Frontend\SingleProduct\WishlistProductPageController;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {

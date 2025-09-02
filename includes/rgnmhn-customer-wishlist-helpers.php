@@ -1,14 +1,14 @@
 <?php
 // Exit if accessed directly.
 
-use Src\ProductOptions;
+use ReaganMahinay\RGNCustomerWishlist\ProductOptions;
 
 if (!defined('ABSPATH')) {
   exit;
 }
 
 
-function rgnWishlistStockStatus(WC_Product $product)
+function rgnmhnCustomerWishlistStockStatus(WC_Product $product)
 {
   $status = $product->get_stock_status();
 
@@ -19,11 +19,11 @@ function rgnWishlistStockStatus(WC_Product $product)
   ];
 
   if ($status === 'onbackorder') {
-    $args['label'] = __('On backorder', 'rgn-customer-wishlist');
+    $args['label'] = __('On backorder', 'rgnmhn-customer-wishlist');
   } else if ($status === 'instock') {
-    $args['label'] = __('In Stock', 'rgn-customer-wishlist');
+    $args['label'] = __('In Stock', 'rgnmhn-customer-wishlist');
   } else {
-    $args['label'] = __('Out of Stock', 'rgn-customer-wishlist');
+    $args['label'] = __('Out of Stock', 'rgnmhn-customer-wishlist');
   }
 
   /**
@@ -31,7 +31,7 @@ function rgnWishlistStockStatus(WC_Product $product)
    * @param array $args
    * @param Wc_Product $product
    */
-  $args = (array) apply_filters('rgn_wishlist_stock_status_args', $args, $product);
+  $args = (array) apply_filters('rgnmhn_customer_wishlist_stock_status_args', $args, $product);
 
   // Sanitize classes if not empty
   $sanitizedClasses = '';
@@ -50,28 +50,28 @@ function rgnWishlistStockStatus(WC_Product $product)
    * @param array      $args    The arguments array.
    * @param WC_Product $product Product object.
    */
-  return apply_filters('rgn_wishlist_stock_status_html', $html, $args, $product);
+  return apply_filters('rgnmhn_customer_wishlist_stock_status_html', $html, $args, $product);
 }
 
-function rgnFormattedWishlistDate(string $date)
+function rgnmhnCustomerWishlistFormattedDate(string $date)
 {
   $dateFormat = get_option('date_format', 'F j, Y');
   $formattedDate = wp_date($dateFormat, strtotime($date));
 
-  $output = apply_filters('rgn_customer_wishlist_format_date', $formattedDate, $date);
+  $output = apply_filters('rgnmhn_customer_wishlist_format_date', $formattedDate, $date);
   return $output;
 }
 
-function rgnFormatWishlistTitle(WC_Product $product)
+function rgnmhnCustomerWishlistFormatTitle(WC_Product $product)
 {
   $args = [
     'title' => $product->get_title(),
     'url' => $product->get_permalink(),
-    'class' => ['rgn-text-[16px]'],
+    'class' => ['rgnmhn-text-[16px]'],
     'attrs' => [],
   ];
 
-  $args = apply_filters('rgn_wishlist_product_title_args', $args, $product);
+  $args = apply_filters('rgnmhn_customer_wishlist_product_title_args', $args, $product);
 
 
   $classStr = implode(' ', array_map('strval', (array) $args['class']));
@@ -94,7 +94,7 @@ function rgnFormatWishlistTitle(WC_Product $product)
     esc_html($args['title'])
   );
 
-  $output = apply_filters('rgn_customer_wishlist_product_title', $html, $args, $product);
+  $output = apply_filters('rgnmhn_customer_wishlist_product_title', $html, $args, $product);
   return (string) $output;
 }
 
@@ -104,7 +104,7 @@ function rgnFormatWishlistTitle(WC_Product $product)
  * @return string The formatted attributes (can include HTML via filters).
  */
 
-function rgnFormattedAttributes(WC_Product $product)
+function rgnmhnCustomerWishlistFormattedAttributes(WC_Product $product)
 {
 
   if (!$product instanceof WC_Product) {
@@ -150,7 +150,7 @@ function rgnFormattedAttributes(WC_Product $product)
     $lines[] = $p['label'] . ' - ' . $p['value'];
   }
 
-  $separator = apply_filters('rgn_customer_wishlist_list_attributes_separator', ', ');
+  $separator = apply_filters('rgnmhn_customer_wishlist_list_attributes_separator', ', ');
 
   $default = implode($separator, $lines);
 
@@ -166,7 +166,7 @@ function rgnFormattedAttributes(WC_Product $product)
    * @param WC_Product_Variable   $parent  The parent variable product (if any).
    * @param string[]              $lines   List of "Label - Value" strings.
    */
-  $output = apply_filters('rgn_customer_wishlist_list_attributes', $default, $product, $parent, $pairs);
+  $output = apply_filters('rgnmhn_customer_wishlist_list_attributes', $default, $product, $parent, $pairs);
 
   return (string) $output;
 }
@@ -180,8 +180,8 @@ function wishListIdentifier()
     ];
   } else {
     $token = '';
-    if (isset($_COOKIE[RGN_WISHLIST_COOKIE])) {
-      $token = sanitize_text_field($_COOKIE[RGN_WISHLIST_COOKIE]);
+    if (isset($_COOKIE[RGNMHN_WISHLIST_COOKIE])) {
+      $token = sanitize_text_field(wp_unslash($_COOKIE[RGNMHN_WISHLIST_COOKIE]));
     }
 
     if (empty($token)) {
@@ -189,7 +189,7 @@ function wishListIdentifier()
 
 
       $days = ProductOptions::getGuestUserExpiryDate();
-      wc_setcookie(RGN_WISHLIST_COOKIE, $token, time() + (int) $days * DAY_IN_SECONDS);
+      wc_setcookie(RGNMHN_WISHLIST_COOKIE, $token, time() + (int) $days * DAY_IN_SECONDS);
     }
     return [
       'type' => 'token',
@@ -205,7 +205,7 @@ function wishListIdentifier()
  * @param array $availableVariations The list of available variations (each variation is an associative array).
  * @return int|null Returns the variation ID if a match is found, otherwise null.
  */
-function getDefaultVariationID(array $defaultAttributes, array $availableVariations): ?int
+function rgnmhnCustomerWishlistGetDefaultVariationID(array $defaultAttributes, array $availableVariations): ?int
 {
   foreach ($availableVariations as $variation) {
     $match = true;
@@ -227,9 +227,9 @@ function getDefaultVariationID(array $defaultAttributes, array $availableVariati
 }
 
 
-function renderComponent(string $fileName, array $variables = [])
+function rgnmhnCustomerWishlistRenderComponent(string $fileName, array $variables = [])
 {
-  $path = RGN_CUSTOMER_WISHLIST_PATH . 'admin/templates/components/' . $fileName;
+  $path = RGNMHN_CUSTOMER_WISHLIST_PATH . 'admin/templates/components/' . $fileName;
   if (file_exists($path)) {
     include $path;
   } else {
@@ -237,18 +237,7 @@ function renderComponent(string $fileName, array $variables = [])
   }
 }
 
-function adminTemplateFile(string $file, array $data = [])
-{
-  require_once RGN_CUSTOMER_WISHLIST_PATH  . 'admin/templates/' . $file;
-}
-
-function frontendTemplateFile(string $file, array $data = [])
-{
-  require_once RGN_CUSTOMER_WISHLIST_PATH  . 'templates/' . $file;
-}
-
-
-function sanitizeSvg($svg)
+function rgnmhnCustomerWishlistAllowedSVGTag()
 {
   $allowedSVGTags = [
     'svg' => [
@@ -289,10 +278,10 @@ function sanitizeSvg($svg)
       'class' => true,
     ],
   ];
-  return wp_kses($svg, $allowedSVGTags);
+  return $allowedSVGTags;
 }
 
-function getIcons()
+function rgnmhnCustomerWishlistGetIcons()
 {
   $icons =  [
     'icon-1' => '<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
@@ -322,7 +311,7 @@ function getIcons()
                 </svg>'
   ];
 
-  $additionalIcon = (array) apply_filters('rgn_single_product_wishlist_icon', []);
+  $additionalIcon = (array) apply_filters('rgnmhn_customer_wishlist_add_custom_icon_for_single_product', []);
   $icons = $icons + $additionalIcon;
   return $icons;
 }

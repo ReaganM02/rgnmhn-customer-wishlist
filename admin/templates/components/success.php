@@ -3,8 +3,11 @@
 if (!defined('ABSPATH')) {
   exit;
 }
+// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 if (isset($_GET['settings-updated']) && $_GET['settings-updated'] === 'true') {
 ?>
-  <div class="rgn-p-2 rgn-border-l-2 rgn-border-green-600 rgn-border rgn-bg-green-100 rgn-text-green-700 rgn-mb-4 rgn-shadow rgn-text-base rgn-rounded">Settings Successfully Saved!</div>
+  <div class="rgnmhn-p-2 rgnmhn-border-l-2 rgnmhn-border-green-600 rgnmhn-border rgnmhn-bg-green-100 rgnmhn-text-green-700 rgnmhn-mb-4 rgnmhn-shadow rgnmhn-text-base rgnmhn-rounded">
+    <?php echo esc_html(__('Settings Successfully Saved!', 'rgnmhn-customer-wishlist')) ?>
+  </div>
 <?php
 }

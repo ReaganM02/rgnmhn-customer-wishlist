@@ -1,11 +1,10 @@
 <?php
 
-namespace Src\Frontend\SingleProduct;
+namespace ReaganMahinay\RGNCustomerWishlist\Frontend\SingleProduct;
 
-
-use Src\Models\WishlistModel;
-use Src\MyAccountOptions;
-use Src\ProductOptions;
+use ReaganMahinay\RGNCustomerWishlist\Models\WishlistModel;
+use ReaganMahinay\RGNCustomerWishlist\MyAccountOptions;
+use ReaganMahinay\RGNCustomerWishlist\ProductOptions;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -22,12 +21,12 @@ if (!defined('ABSPATH')) {
  *
  * # Hooks registered
  * - `wp_enqueue_scripts` to enqueue scripts/styles
- * - A product-page action hook (filter-controlled via `rgn_wishlist_placement_product_page`)
- * - Shortcode `rgn_wishlist_single_product` when "use_shortcode" is selected
+ * - A product-page action hook (filter-controlled via `rgnmhn_wishlist_placement_product_page`)
+ * - Shortcode `rgnmhn_wishlist_single_product` when "use_shortcode" is selected
  *
  * # Filters
- * - `rgn_wishlist_placement_product_page` (string|false): set the WC single product hook name
- * - `rgn_wishlist_placement_product_page_priority` (int): set hook priority
+ * - `rgnmhn_wishlist_placement_product_page` (string|false): set the WC single product hook name
+ * - `rgnmhn_wishlist_placement_product_page_priority` (int): set hook priority
  *
  * @since 1.0.0
  */
@@ -48,7 +47,7 @@ class WishlistProductPage
    *
    * - Always enqueues assets via `wp_enqueue_scripts`.
    * - If placement is not "use_shortcode", attaches `displayWishlistContent()` to the chosen product hook.
-   * - Otherwise registers `[rgn_wishlist_single_product]` shortcode.
+   * - Otherwise registers `[rgnmhn_wishlist_single_product]` shortcode.
    *
    * @since 1.0.0
    * @return void
@@ -62,12 +61,12 @@ class WishlistProductPage
         add_action(self::hookToUse(), [$this, 'displayWishlistContent'], self::hookPriority());
       }
     } else {
-      add_shortcode('rgn_wishlist_single_product', [$this, 'shortCode']);
+      add_shortcode('rgnmhn_customer_wishlist_single_product', [$this, 'shortCode']);
     }
   }
 
   /**
-   * Shortcode callback for `[rgn_wishlist_single_product]`.
+   * Shortcode callback for `[rgnmhn_wishlist_single_product]`.
    *
    * Outputs wishlist UI only on single product pages.
    * Uses output buffering to return the rendered markup.
@@ -90,7 +89,7 @@ class WishlistProductPage
    * Determine which single product hook to use for rendering.
    *
    * Default is the value from `ProductOptions::getSelectedPlacementContent()`.
-   * Developers may override via the `rgn_wishlist_placement_product_page` filter.
+   * Developers may override via the `rgnmhn_wishlist_placement_product_page` filter.
    *
    * @since 1.0.0
    * @return string|false Hook name or false to disable hook placement.
@@ -103,7 +102,7 @@ class WishlistProductPage
      * - Return any WC single product hook (string) to reposition the output.
      * - Return false to disable hook placement.
      */
-    return apply_filters('rgn_wishlist_placement_product_page', $defaultHook);
+    return apply_filters('rgnmhn_wishlist_placement_product_page', $defaultHook);
   }
 
   /**
@@ -118,10 +117,10 @@ class WishlistProductPage
   {
     $defaultPriority = 35;
     /**
-     * Filter: rgn_wishlist_placement_product_page_priority
+     * Filter: rgnmhn_wishlist_placement_product_page_priority
      * - Adjust the priority of the chosen hook
      */
-    return apply_filters('rgn_wishlist_placement_product_page_priority',  $defaultPriority);
+    return apply_filters('rgnmhn_wishlist_placement_product_page_priority',  $defaultPriority);
   }
 
   /**
@@ -148,6 +147,9 @@ class WishlistProductPage
    */
   public function getWishlistContent()
   {
+    if (ProductOptions::isGuestUserAllowed() !== 'yes') {
+      return '';
+    }
     ob_start();
     $this->getAddedWishlistContent();
     echo ob_get_clean();
@@ -221,7 +223,7 @@ class WishlistProductPage
   {
     $icon = ProductOptions::getIcon();
     $args = [
-      'icon' => getIcons()[$icon],
+      'icon' => rgnmhnCustomerWishlistGetIcons()[$icon],
       'label' => ProductOptions::getWishlistLabel(),
     ];
     self::getTemplateOnce('single-product/add.php', $args);
@@ -254,7 +256,7 @@ class WishlistProductPage
    */
   private static function getTemplateOnce(string $path, $data = [])
   {
-    require_once RGN_CUSTOMER_WISHLIST_PATH . 'templates/' . $path;
+    require_once RGNMHN_CUSTOMER_WISHLIST_PATH . 'templates/' . $path;
   }
 
   /**
@@ -302,15 +304,15 @@ class WishlistProductPage
    */
   public function assets()
   {
-    // $path = RGN_CUSTOMER_WISHLIST_PATH . 'assets/js/rgn-customer-wishlist-single-product.js';
+    // $path = RGNMHN_CUSTOMER_WISHLIST_PATH . 'assets/js/rgnmhn-customer-wishlist-single-product.js';
     if (is_product()) {
-      wp_enqueue_script('rgn-customer-wishlist-single-product', RGN_CUSTOMER_WISHLIST_URL . 'assets/js/rgn-customer-wishlist-single-product.js', ['jquery', 'wc-add-to-cart-variation',], RGN_CUSTOMER_WISHLIST_VERSION, true);
+      wp_enqueue_script('rgnmhn-customer-wishlist-single-product', RGNMHN_CUSTOMER_WISHLIST_URL . 'assets/js/rgnmhn-customer-wishlist-single-product.js', ['jquery', 'wc-add-to-cart-variation',], RGNMHN_CUSTOMER_WISHLIST_VERSION, true);
 
-      wp_localize_script('rgn-customer-wishlist-single-product', 'rgn_wishlist_single_product', [
+      wp_localize_script('rgnmhn-customer-wishlist-single-product', 'rgnmhn_wishlist_single_product', [
         'url' => admin_url('admin-ajax.php'),
         'nonce' => [
-          'add' => wp_create_nonce('rgn_add_customer_wishlist_security'),
-          'get' => wp_create_nonce('rgn_get_customer_wishlist_security'),
+          'add' => wp_create_nonce('rgnmhn_add_customer_wishlist_security'),
+          'get' => wp_create_nonce('rgnmhn_get_customer_wishlist_security'),
         ],
         'product_id' => get_the_ID(),
         'added_ids' => $this->getAddedVariationIDs(get_the_ID()),
@@ -318,10 +320,10 @@ class WishlistProductPage
         'is_added' => $this->isAdded(get_the_ID())
       ]);
 
-      wp_register_style('rgn-customer-wishlist-inline', false, [], RGN_CUSTOMER_WISHLIST_VERSION);
-      wp_enqueue_style('rgn-customer-wishlist-inline', '', [], RGN_CUSTOMER_WISHLIST_VERSION);
-      wp_add_inline_style('rgn-customer-wishlist-inline', self::inlineCss());
-      wp_enqueue_style('rgn-customer-wishlist-single-product', RGN_CUSTOMER_WISHLIST_URL . 'assets/css/rgn-customer-wishlist.css', ['rgn-customer-wishlist-inline'], RGN_CUSTOMER_WISHLIST_VERSION);
+      wp_register_style('rgnmhn-customer-wishlist-inline', false, [], RGNMHN_CUSTOMER_WISHLIST_VERSION);
+      wp_enqueue_style('rgnmhn-customer-wishlist-inline', '', [], RGNMHN_CUSTOMER_WISHLIST_VERSION);
+      wp_add_inline_style('rgnmhn-customer-wishlist-inline', self::inlineCss());
+      wp_enqueue_style('rgnmhn-customer-wishlist-single-product', RGNMHN_CUSTOMER_WISHLIST_URL . 'assets/css/rgnmhn-customer-wishlist.css', ['rgnmhn-customer-wishlist-inline'], RGNMHN_CUSTOMER_WISHLIST_VERSION);
     }
   }
 
@@ -333,19 +335,19 @@ class WishlistProductPage
    */
   public static function inlineCss()
   {
-    $backgroundColor = ProductOptions::getBackgroundColor();
-    $color = ProductOptions::getTextColor();
-    $fontSize = ProductOptions::getFontSize();
-    $svgSize = ProductOptions::getIconSize();
-    $removeTextColor = ProductOptions::getBrowseWishlistColor();
+    $backgroundColor = sanitize_hex_color(ProductOptions::getBackgroundColor());
+    $color = sanitize_hex_color(ProductOptions::getTextColor());
+    $fontSize = absint(ProductOptions::getFontSize());
+    $svgSize = absint(ProductOptions::getIconSize());
+    $browseWishlistColor = sanitize_hex_color(ProductOptions::getBrowseWishlistColor());
 
     return "
       :root {
-        --rgn-wishlist-bg-color: $backgroundColor;
-        --rgn-wishlist-text-color:  $color;
-        --rgn-wishlist-font-size: $fontSize" . "px;
-        --rgn-wishlist-svg-size: $svgSize" . "px;
-        --rgn-wishlist-browse-wishlist: $removeTextColor;
+        --rgnmhn-wishlist-bg-color: $backgroundColor;
+        --rgnmhn-wishlist-text-color:  $color;
+        --rgnmhn-wishlist-font-size: $fontSize" . "px;
+        --rgnmhn-wishlist-svg-size: $svgSize" . "px;
+        --rgnmhn-wishlist-browse-wishlist: $browseWishlistColor;
       }
     ";
   }

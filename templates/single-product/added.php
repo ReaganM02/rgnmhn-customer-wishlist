@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
 }
 
 ?>
-<template id="rgn-template-added-wishlist">
+<template id="rgnmhn-template-added-wishlist">
   <div>
     <?php
     /**
@@ -13,9 +13,9 @@ if (!defined('ABSPATH')) {
      *
      * @since 1.0.0
      */
-    do_action('rgn_wishlist_single_product_before_added')
+    do_action('rgnmhn_wishlist_single_product_before_added')
     ?>
-    <a href="/my-account/<?php echo esc_attr($data['slug']) ?>" class="rgn-added-to-wishlist">
+    <a href="/my-account/<?php echo esc_attr($data['slug']) ?>" class="rgnmhn-added-to-wishlist">
       <?php echo esc_html($data['label']) ?>
     </a>
     <?php
@@ -24,7 +24,7 @@ if (!defined('ABSPATH')) {
      *
      * @since 1.0.0
      */
-    do_action('rgn_wishlist_single_product_after_added')
+    do_action('rgnmhn_wishlist_single_product_after_added')
     ?>
   </div>
 </template>

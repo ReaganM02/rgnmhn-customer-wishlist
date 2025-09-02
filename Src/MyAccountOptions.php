@@ -1,6 +1,6 @@
 <?php
 
-namespace Src;
+namespace ReaganMahinay\RGNCustomerWishlist;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
  * Class MyAccountOptions
  *
  * Handles retrieval, sanitization, and management of the
- * "My Account" options for the RGN Customer Wishlist plugin.
+ * "My Account" options for the rgnmhn Customer Wishlist plugin.
  *
  * This class provides access to settings such as:
  * - Menu slug
@@ -32,7 +32,7 @@ final class MyAccountOptions
    *  Option key for storing this feature's settings in WordPress.
    *  @since 1.0.0
    */
-  private const KEY = 'rgn_customer_wishlist_my_account_settings';
+  private const KEY = 'rgnmhn_customer_wishlist_my_account_settings';
 
   /**
    * Cached plugin options array.
@@ -173,6 +173,16 @@ final class MyAccountOptions
   }
 
 
+  public static function getKeysAndRules()
+  {
+    $output = [];
+    foreach (self::fields() as $field) {
+      $output[$field['name']] = $field['rules'];
+    }
+    return $output;
+  }
+
+
   /**
    * Define the fields used for My Account wishlist settings.
    *
@@ -180,7 +190,6 @@ final class MyAccountOptions
    * current value, label, and description.
    *
    * @since 1.0.0
-   * @return array<string, array<string, mixed>> Array of field definitions.
    */
   public static function fields()
   {
@@ -190,29 +199,33 @@ final class MyAccountOptions
         'id' => 'menu-title',
         'name' => 'menu-title',
         'value' => self::getMenuTitle(),
-        'label' => __('Menu Title', 'rgn-customer-wishlist')
+        'label' => __('Menu Title', 'rgnmhn-customer-wishlist'),
+        'rules' => ['type' => 'text']
       ],
       'menu-slug' => [
         'type' => 'text',
         'id' => 'menu-slug',
         'name' => 'menu-slug',
         'value' => self::getSlug(),
-        'label' => __('Menu Slug', 'rgn-customer-wishlist'),
-        'description' => __('No spaces are allowed valid slug only.', 'rgn-customer-wishlist')
+        'label' => __('Menu Slug', 'rgnmhn-customer-wishlist'),
+        'description' => __('No spaces are allowed valid slug only.', 'rgnmhn-customer-wishlist'),
+        'rules' => ['type' => 'text']
       ],
       'content-title' => [
         'type' => 'text',
         'id' => 'content-title',
         'name' => 'content-title',
         'value' => self::getContentTitle(),
-        'label' => __('Content Title', 'rgn-customer-wishlist')
+        'label' => __('Content Title', 'rgnmhn-customer-wishlist'),
+        'rules' => ['type' => 'text']
       ],
       'content-empty-message' => [
         'type' => 'text',
         'id' => 'content-empty-message',
         'name' => 'content-empty-message',
         'value' => self::getEmptyContentMessage(),
-        'label' => __('Empty wishlist message', 'rgn-customer-wishlist')
+        'label' => __('Empty wishlist message', 'rgnmhn-customer-wishlist'),
+        'rules' => ['type' => 'text']
       ],
     ];
   }

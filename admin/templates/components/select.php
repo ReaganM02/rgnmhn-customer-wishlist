@@ -5,8 +5,8 @@ if (!defined('ABSPATH')) {
 }
 ?>
 <div>
-  <label for="<?php echo esc_attr($variables['id']) ?>" class="rgn-text-base rgn-text-zinc-600 rgn-block"><?php echo esc_html($variables['label']) ?></label>
-  <select name="<?php echo esc_attr($variables['name']) ?>" id="<?php echo esc_attr($variables['id']) ?>" class="rgn-h-12 rgn-w-full">
+  <label for="<?php echo esc_attr($variables['id']) ?>" class="rgnmhn-text-base rgnmhn-text-zinc-600 rgnmhn-block"><?php echo esc_html($variables['label']) ?></label>
+  <select name="<?php echo esc_attr($variables['name']) ?>" id="<?php echo esc_attr($variables['id']) ?>" class="rgnmhn-h-12 rgnmhn-w-full">
     <?php foreach ($variables['options'] as $value => $label): ?>
       <option value="<?php echo esc_attr($value) ?>" <?php echo $value === $variables['selected'] ? 'selected' : '' ?>><?php echo esc_html($label) ?></option>
     <?php endforeach; ?>

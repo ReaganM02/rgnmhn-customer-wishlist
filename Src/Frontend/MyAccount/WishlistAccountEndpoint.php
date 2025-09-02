@@ -1,5 +1,15 @@
 <?php
 
+namespace ReaganMahinay\RGNCustomerWishlist\Frontend\MyAccount;
+
+use ReaganMahinay\RGNCustomerWishlist\Models\WishlistModel;
+use ReaganMahinay\RGNCustomerWishlist\MyAccountOptions;
+
+// Exit if accessed directly.
+if (!defined('ABSPATH')) {
+  exit;
+}
+
 /**
  * WishlistAccountEndpoint
  *
@@ -10,20 +20,8 @@
  * - Enqueues styles/scripts only when on the endpoint page.
  *
  *
- * @package Src\Frontend\MyAccount
  * @since   1.0.0
  */
-
-
-namespace Src\Frontend\MyAccount;
-
-use Src\Models\WishlistModel;
-use Src\MyAccountOptions;
-
-// Exit if accessed directly.
-if (!defined('ABSPATH')) {
-  exit;
-}
 
 class WishlistAccountEndpoint
 {
@@ -76,7 +74,7 @@ class WishlistAccountEndpoint
     add_action('woocommerce_account_' . $this->slug . '_endpoint', [$this, 'pageContent']);
 
     // Internal hook: outputs the wishlist markup (used inside templates).
-    add_action('rgn_wishlist_my_account_content', [$this, 'wishlistContent']);
+    add_action('rgnmhn_wishlist_my_account_content', [$this, 'wishlistContent']);
   }
 
   /**
@@ -124,19 +122,19 @@ class WishlistAccountEndpoint
       $args = [
         'empty-message' => MyAccountOptions::getEmptyContentMessage()
       ];
-      echo self::renderTemplateOnce('my-account/empty.php', $args);
+      echo wp_kses_post(self::renderTemplateOnce('my-account/empty.php', $args));
     } else {
       $args = [
         'content-title' => MyAccountOptions::getContentTitle(),
         'list' => $list
       ];
-      echo self::renderTemplateOnce('my-account/table.php', $args);
+      echo wp_kses_post(self::renderTemplateOnce('my-account/table.php', $args));
     }
   }
 
   /**
    * Renders the outer wrapper template for the endpoint page.
-   * The template should call `do_action('rgn_wishlist_my_account_content')`
+   * The template should call `do_action('rgnmhn_wishlist_my_account_content')`
    * where the inner content should appear.
    *
    * @return void
@@ -156,15 +154,15 @@ class WishlistAccountEndpoint
    */
   private static function renderTemplateOnce(string $path, $data = [])
   {
-    require_once RGN_CUSTOMER_WISHLIST_PATH . 'templates/' . $path;
+    require_once RGNMHN_CUSTOMER_WISHLIST_PATH . 'templates/' . $path;
   }
 
   /**
    * Enqueue styles/scripts for the endpoint page only.
    *
    * Loads:
-   * - CSS: /assets/css/rgn-my-account-wishlist.css
-   * - JS : /assets/js/rgn-customer-wishlist-my-account.js (depends on jQuery & wc-cart-fragments)
+   * - CSS: /assets/css/rgnmhn-my-account-wishlist.css
+   * - JS : /assets/js/rgnmhn-customer-wishlist-my-account.js (depends on jQuery & wc-cart-fragments)
    *
    * Localizes:
    * - AJAX endpoint URL
@@ -184,15 +182,15 @@ class WishlistAccountEndpoint
         wp_enqueue_script('wc-cart-fragments');
       }
 
-      wp_enqueue_style('rgn-my-account-wishlist', RGN_CUSTOMER_WISHLIST_URL . 'assets/css/rgn-my-account-wishlist.css', [], RGN_CUSTOMER_WISHLIST_VERSION);
-      wp_enqueue_script('rgn-my-account-wishlist-script', RGN_CUSTOMER_WISHLIST_URL . 'assets/js/rgn-customer-wishlist-my-account.js', ['jquery', 'wc-cart-fragments'], RGN_CUSTOMER_WISHLIST_VERSION, true);
+      wp_enqueue_style('rgnmhn-my-account-wishlist', RGNMHN_CUSTOMER_WISHLIST_URL . 'assets/css/rgnmhn-my-account-wishlist.css', [], RGNMHN_CUSTOMER_WISHLIST_VERSION);
+      wp_enqueue_script('rgnmhn-my-account-wishlist-script', RGNMHN_CUSTOMER_WISHLIST_URL . 'assets/js/rgnmhn-customer-wishlist-my-account.js', ['jquery', 'wc-cart-fragments'], RGNMHN_CUSTOMER_WISHLIST_VERSION, true);
 
       // Provide AJAX URL and nonces to the script.
-      wp_localize_script('rgn-my-account-wishlist-script', 'rgn_wishlist_my_account', [
+      wp_localize_script('rgnmhn-my-account-wishlist-script', 'rgnmhn_wishlist_my_account', [
         'url' => admin_url('admin-ajax.php'),
         'nonces' => [
-          'add' => wp_create_nonce('rgn_add_to_cart_security'),
-          'remove' => wp_create_nonce('rgn_remove_from_wishlist_security')
+          'add' => wp_create_nonce('rgnmhn_add_to_cart_security'),
+          'remove' => wp_create_nonce('rgnmhn_remove_from_wishlist_security')
         ]
       ]);
     }

@@ -7,14 +7,14 @@ namespace Composer\Autoload;
 class ComposerStaticInitd751713988987e9331980363e24189ce
 {
     public static $prefixLengthsPsr4 = array (
-        'S' => 
+        'R' => 
         array (
-            'Src\\' => 4,
+            'ReaganMahinay\\RGNCustomerWishlist\\' => 34,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Src\\' => 
+        'ReaganMahinay\\RGNCustomerWishlist\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Src',
         ),
@@ -22,8 +22,19 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'Src\\Admin\\Admin' => __DIR__ . '/../..' . '/Src/Admin/Admin.php',
-        'Src\\InitializePlugin' => __DIR__ . '/../..' . '/Src/InitializePlugin.php',
+        'ReaganMahinay\\RGNCustomerWishlist\\Admin\\Admin' => __DIR__ . '/../..' . '/Src/Admin/Admin.php',
+        'ReaganMahinay\\RGNCustomerWishlist\\Admin\\FormController' => __DIR__ . '/../..' . '/Src/Admin/FormController.php',
+        'ReaganMahinay\\RGNCustomerWishlist\\Frontend\\Actions' => __DIR__ . '/../..' . '/Src/Frontend/Actions.php',
+        'ReaganMahinay\\RGNCustomerWishlist\\Frontend\\MyAccount\\WishlistAccountEndpoint' => __DIR__ . '/../..' . '/Src/Frontend/MyAccount/WishlistAccountEndpoint.php',
+        'ReaganMahinay\\RGNCustomerWishlist\\Frontend\\MyAccount\\WishlistAjaxController' => __DIR__ . '/../..' . '/Src/Frontend/MyAccount/WishlistAjaxController.php',
+        'ReaganMahinay\\RGNCustomerWishlist\\Frontend\\SingleProduct\\WishlistProductPage' => __DIR__ . '/../..' . '/Src/Frontend/SingleProduct/WishlistProductPage.php',
+        'ReaganMahinay\\RGNCustomerWishlist\\Frontend\\SingleProduct\\WishlistProductPageController' => __DIR__ . '/../..' . '/Src/Frontend/SingleProduct/WishlistProductPageController.php',
+        'ReaganMahinay\\RGNCustomerWishlist\\GeneralSettingOptions' => __DIR__ . '/../..' . '/Src/GeneralSettingOptions.php',
+        'ReaganMahinay\\RGNCustomerWishlist\\InitializePlugin' => __DIR__ . '/../..' . '/Src/InitializePlugin.php',
+        'ReaganMahinay\\RGNCustomerWishlist\\Models\\WishlistModel' => __DIR__ . '/../..' . '/Src/Models/WishlistModel.php',
+        'ReaganMahinay\\RGNCustomerWishlist\\MyAccountOptions' => __DIR__ . '/../..' . '/Src/MyAccountOptions.php',
+        'ReaganMahinay\\RGNCustomerWishlist\\PluginAction' => __DIR__ . '/../..' . '/Src/PluginAction.php',
+        'ReaganMahinay\\RGNCustomerWishlist\\ProductOptions' => __DIR__ . '/../..' . '/Src/ProductOptions.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

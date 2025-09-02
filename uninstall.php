@@ -1,8 +1,8 @@
 <?php
 
-use Src\GeneralSettingOptions;
-use Src\MyAccountOptions;
-use Src\ProductOptions;
+use ReaganMahinay\RGNCustomerWishlist\GeneralSettingOptions;
+use ReaganMahinay\RGNCustomerWishlist\MyAccountOptions;
+use ReaganMahinay\RGNCustomerWishlist\ProductOptions;
 
 if (! defined('WP_UNINSTALL_PLUGIN')) {
   exit;
@@ -19,6 +19,8 @@ if (GeneralSettingOptions::allowDeleteAllDataOnUninstall() === 'yes') {
   delete_option(GeneralSettingOptions::optionKey());
 
   global $wpdb;
-  $tableName = $wpdb->prefix . 'rgn_customer_waitlist';
+  $tableName = $wpdb->prefix . 'rgnmhn_customer_waitlist';
+
+  // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
   $wpdb->query("DROP TABLE IF EXISTS `{$tableName}`");
 }

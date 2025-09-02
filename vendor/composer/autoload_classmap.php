@@ -7,6 +7,17 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'Src\\Admin\\Admin' => $baseDir . '/Src/Admin/Admin.php',
-    'Src\\InitializePlugin' => $baseDir . '/Src/InitializePlugin.php',
+    'ReaganMahinay\\RGNCustomerWishlist\\Admin\\Admin' => $baseDir . '/Src/Admin/Admin.php',
+    'ReaganMahinay\\RGNCustomerWishlist\\Admin\\FormController' => $baseDir . '/Src/Admin/FormController.php',
+    'ReaganMahinay\\RGNCustomerWishlist\\Frontend\\Actions' => $baseDir . '/Src/Frontend/Actions.php',
+    'ReaganMahinay\\RGNCustomerWishlist\\Frontend\\MyAccount\\WishlistAccountEndpoint' => $baseDir . '/Src/Frontend/MyAccount/WishlistAccountEndpoint.php',
+    'ReaganMahinay\\RGNCustomerWishlist\\Frontend\\MyAccount\\WishlistAjaxController' => $baseDir . '/Src/Frontend/MyAccount/WishlistAjaxController.php',
+    'ReaganMahinay\\RGNCustomerWishlist\\Frontend\\SingleProduct\\WishlistProductPage' => $baseDir . '/Src/Frontend/SingleProduct/WishlistProductPage.php',
+    'ReaganMahinay\\RGNCustomerWishlist\\Frontend\\SingleProduct\\WishlistProductPageController' => $baseDir . '/Src/Frontend/SingleProduct/WishlistProductPageController.php',
+    'ReaganMahinay\\RGNCustomerWishlist\\GeneralSettingOptions' => $baseDir . '/Src/GeneralSettingOptions.php',
+    'ReaganMahinay\\RGNCustomerWishlist\\InitializePlugin' => $baseDir . '/Src/InitializePlugin.php',
+    'ReaganMahinay\\RGNCustomerWishlist\\Models\\WishlistModel' => $baseDir . '/Src/Models/WishlistModel.php',
+    'ReaganMahinay\\RGNCustomerWishlist\\MyAccountOptions' => $baseDir . '/Src/MyAccountOptions.php',
+    'ReaganMahinay\\RGNCustomerWishlist\\PluginAction' => $baseDir . '/Src/PluginAction.php',
+    'ReaganMahinay\\RGNCustomerWishlist\\ProductOptions' => $baseDir . '/Src/ProductOptions.php',
 );

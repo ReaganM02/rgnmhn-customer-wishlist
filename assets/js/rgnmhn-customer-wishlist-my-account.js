@@ -8,7 +8,7 @@
  * Global localized object injected via wp_localize_script().
  * @type {WishlistMyAccountOBJ}
  */
-const CONFIG = window.rgn_wishlist_my_account
+const CONFIG = window.rgnmhn_wishlist_my_account
 
 
 /**
@@ -16,8 +16,8 @@ const CONFIG = window.rgn_wishlist_my_account
  * @classdesc
  * Binds a single `click` listener to a root container (event delegation) and
  * handles two actions for items inside that container:
- *  1) **Add to cart** via `.rgn-add-to-cart`
- *  2) **Delete from wishlist** via `.rgn-wishlist-delete-btn`
+ *  1) **Add to cart** via `.rgnmhn-add-to-cart`
+ *  2) **Delete from wishlist** via `.rgnmhn-wishlist-delete-btn`
  *
  * 
  *  On success, it:
@@ -26,10 +26,10 @@ const CONFIG = window.rgn_wishlist_my_account
  *  - Optionally opens the Side Cart panel if that plugin is present
  * 
 * @param {string} id
- * The DOM **id** of the root `<div>` that wraps the wishlist (e.g. `"rgn-my-account-wishlist"`).
+ * The DOM **id** of the root `<div>` that wraps the wishlist (e.g. `"rgnmhn-my-account-wishlist"`).
  * The constructor is fail-safe: if the element is missing or not a `<div>`, it no-ops.
  * 
- * @requires window.rgn_wishlist_my_account
+ * @requires window.rgnmhn_wishlist_my_account
  * A localized global config object with shape:
  * `{ url: string, nonces: { add: string, remove: string } }`.
  * Used for AJAX destination and nonce verification.
@@ -44,15 +44,15 @@ const CONFIG = window.rgn_wishlist_my_account
  * @summary Selectors & data requirements
  * - **Container**: a `<div>` with the provided `id`.
  * - **Buttons**:
- *   - `.rgn-add-to-cart[data-id="<number>"]`
- *   - `.rgn-wishlist-delete-btn[data-id="<number>"]`
+ *   - `.rgnmhn-add-to-cart[data-id="<number>"]`
+ *   - `.rgnmhn-wishlist-delete-btn[data-id="<number>"]`
  * - **data-id** must be a numeric product/variation ID; parsed with base-10.
  * 
  * @description Network & security
  * - Sends `FormData` POSTs to `CONFIG.url` with `credentials: "same-origin"` and `Accept: "application/json"`.
  * - Actions:
- *     - `rgn_wishlist_add_to_cart`  (nonce: `CONFIG.nonces.add`)
- *     - `rgn_wishlist_delete_item`  (nonce: `CONFIG.nonces.remove`)
+ *     - `rgnmhn_wishlist_add_to_cart`  (nonce: `CONFIG.nonces.add`)
+ *     - `rgnmhn_wishlist_delete_item`  (nonce: `CONFIG.nonces.remove`)
  * - Expects a JSON response: `{ success: boolean, data?: any, message?: string }`
  *   - For **delete**, `data` should contain fresh HTML for the wishlist section.
  *
@@ -94,14 +94,14 @@ class WishlistMyAccount {
   /**
    * Handle “Delete from wishlist” clicks via event delegation.
    *
-   * Walks up from the event target to find a `.rgn-wishlist-delete-btn` inside the
+   * Walks up from the event target to find a `.rgnmhn-wishlist-delete-btn` inside the
    * class root, validates the element type, extracts its `data-id` (parsed base-10),
    * and posts a WordPress AJAX request to delete the item. On a successful JSON
    * response (`{ success: true, data: "<html>" }`), the wishlist markup is replaced
    * with the server-rendered HTML via {@link updateHTML}.
    * 
    * Guards:
-   *  - No-ops if the click didn’t originate from a `.rgn-wishlist-delete-btn`
+   *  - No-ops if the click didn’t originate from a `.rgnmhn-wishlist-delete-btn`
    *  - Ensures the button is inside this instance’s root container
    *  - Ensures the element is an `HTMLButtonElement`
    *  - Defaults `productID` to `0` if `data-id` is missing/invalid (server should reject)
@@ -114,7 +114,7 @@ class WishlistMyAccount {
   * @returns {Promise<void>}
  */
   async deleteWishlist(e) {
-    const deleteBtn = e.target.closest('.rgn-wishlist-delete-btn')
+    const deleteBtn = e.target.closest('.rgnmhn-wishlist-delete-btn')
 
     if (!deleteBtn) {
       return
@@ -132,7 +132,7 @@ class WishlistMyAccount {
     const productID = rawDataID !== null ? parseInt(rawDataID, 10) : 0
 
     const fd = new FormData()
-    fd.append('action', 'rgn_wishlist_delete_item')
+    fd.append('action', 'rgnmhn_wishlist_delete_item')
     fd.append('security', CONFIG.nonces.remove)
     fd.append('product-id', productID)
 
@@ -149,7 +149,7 @@ class WishlistMyAccount {
   /**
    * Handle “Add to cart” clicks from within the wishlist (event delegation).
    * 
-   * Walks up from the event target to find a `.rgn-add-to-cart` button inside this
+   * Walks up from the event target to find a `.rgnmhn-add-to-cart` button inside this
    * instance’s root container, validates it, extracts its numeric `data-id` (base-10),
    * and sends a WordPress AJAX request to add the product/variation to the cart.
    * 
@@ -158,7 +158,7 @@ class WishlistMyAccount {
    *  - Attempts to open the Side Cart panel via {@link openSideCart} (if present)
    * 
    *  Guards (safe no-ops):
-   *  - No matching `.rgn-add-to-cart` element
+   *  - No matching `.rgnmhn-add-to-cart` element
    *  - Element not contained within this instance’s root
    *  - Element is not an `HTMLButtonElement`
    *  - Missing/invalid `data-id` (falls back to `0`; server should reject)
@@ -173,7 +173,7 @@ class WishlistMyAccount {
  */
   async addToCart(e) {
 
-    const btn = e.target.closest('.rgn-add-to-cart')
+    const btn = e.target.closest('.rgnmhn-add-to-cart')
 
     if (!btn) {
       return
@@ -191,7 +191,7 @@ class WishlistMyAccount {
     const productID = rawDataID !== null ? parseInt(rawDataID, 10) : 0
 
     const formData = new FormData()
-    formData.append('action', 'rgn_wishlist_add_to_cart')
+    formData.append('action', 'rgnmhn_wishlist_add_to_cart')
     formData.append('security', CONFIG.nonces.add)
     formData.append('product-id', productID)
     try {
@@ -258,4 +258,4 @@ class WishlistMyAccount {
   }
 }
 
-new WishlistMyAccount('rgn-my-account-wishlist')
+new WishlistMyAccount('rgnmhn-my-account-wishlist')

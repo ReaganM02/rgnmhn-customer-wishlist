@@ -14,10 +14,10 @@
  */
 
 
-namespace Src\Frontend;
+namespace ReaganMahinay\RGNCustomerWishlist\Frontend;
 
-use Src\Models\WishlistModel;
-use Src\MyAccountOptions;
+use ReaganMahinay\RGNCustomerWishlist\Models\WishlistModel;
+use ReaganMahinay\RGNCustomerWishlist\MyAccountOptions;
 
 // Exit if accessed directly.
 if (!defined('ABSPATH')) {
@@ -87,8 +87,8 @@ class Actions
   public function mergeWishlistOnLogIn($userLogIn, $user)
   {
     // Only proceed if the guest token cookie exists in this browser.
-    if (isset($_COOKIE[RGN_WISHLIST_COOKIE])) {
-      $token = sanitize_text_field(wp_unslash($_COOKIE[RGN_WISHLIST_COOKIE]));
+    if (isset($_COOKIE[RGNMHN_WISHLIST_COOKIE])) {
+      $token = sanitize_text_field(wp_unslash($_COOKIE[RGNMHN_WISHLIST_COOKIE]));
 
       $wishlist = new WishlistModel();
       $wishlist->mergeGuestWishlist($token, $user->ID);
@@ -105,7 +105,7 @@ class Actions
       ];
 
       // PHP 7.3+ array signature:
-      @setcookie(RGN_WISHLIST_COOKIE, '', $cookie_args);
+      @setcookie(RGNMHN_WISHLIST_COOKIE, '', $cookie_args);
     }
   }
 }

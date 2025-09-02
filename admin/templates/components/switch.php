@@ -9,13 +9,13 @@ if (!defined('ABSPATH')) {
     type="checkbox"
     id="<?php echo esc_attr($variables['id']) ?>"
     name="<?php echo esc_attr($variables['name']) ?>"
-    value="<?php echo esc_attr($variables['value']) ?>" class="!rgn-hidden"
+    value="<?php echo esc_attr($variables['value']) ?>" class="!rgnmhn-hidden"
     <?php echo $variables['checked'] ? 'checked="true"' : '' ?> />
   <label
     for="<?php echo esc_attr($variables['id']) ?>"
-    class="rgn-cursor-pointer rgn-flex rgn-gap-4 rgn-items-center rgn-select-none">
-    <span class="rgn-block rgn-w-8 rgn-h-4 rgn-switch rgn-relative rgn-rounded rgn-transition"></span>
-    <span class="rgn-text-base rgn-text-zinc-700">
+    class="rgnmhn-cursor-pointer rgnmhn-flex rgnmhn-gap-4 rgnmhn-items-center rgnmhn-select-none rgnmhn-w-max">
+    <span class="rgnmhn-block rgnmhn-w-8 rgnmhn-h-4 rgnmhn-switch rgnmhn-relative rgnmhn-rounded rgnmhn-transition"></span>
+    <span class="rgnmhn-text-base rgnmhn-text-zinc-700">
       <?php echo esc_html($variables['label']) ?>
     </span>
   </label>
