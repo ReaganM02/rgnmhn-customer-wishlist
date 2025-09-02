@@ -8,15 +8,9 @@
  * Author URI:        https://github.com/ReaganM02
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
-<<<<<<< Updated upstream:rgn-customer-wishlist.php
- * Text Domain:       rgn-customer-wishlist
+ * Text Domain:       rgnmhn-customer-wishlist
  * Requires at least: 6.1
  * Requires PHP: 7.4
-=======
- * Text Domain:       rgnmhn-customer-wishlist
- * Requires at least: 5.2
- * Requires PHP: 7.0
->>>>>>> Stashed changes:rgnmhn-customer-wishlist.php
  * Domain Path:       /languages
  * Requires Plugins: woocommerce
  */
