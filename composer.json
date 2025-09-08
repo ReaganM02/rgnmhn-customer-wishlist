@@ -3,5 +3,16 @@
     "psr-4": {
       "ReaganMahinay\\RGNCustomerWishlist\\": "Src/"
     }
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.13",
+    "wp-coding-standards/wpcs": "^3.2",
+    "phpcsstandards/phpcsutils": "^1.1",
+    "phpcsstandards/phpcsextra": "^1.4"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }
