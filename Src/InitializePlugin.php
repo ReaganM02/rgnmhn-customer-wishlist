@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Bootstrap: wires up admin UI and front-end controllers for the wishlist plugin.
  *
@@ -23,45 +22,63 @@ use ReaganMahinay\RGNCustomerWishlist\Frontend\SingleProduct\WishlistProductPage
 use ReaganMahinay\RGNCustomerWishlist\Frontend\SingleProduct\WishlistProductPageController;
 
 // Exit if accessed directly.
-if (!defined('ABSPATH')) {
-  exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-class InitializePlugin
-{
-  public static function run()
-  {
-    if (is_admin()) {
-      new FormController();
-      new Admin();
-    }
+/**
+ * Class InitializePlugin
+ *
+ * Bootstrapper for the wishlist plugin, responsible for loading admin screens,
+ * registering front-end controllers, and handling option updates.
+ *
+ * @package rgnmhn-customer-wishlist
+ */
+class InitializePlugin {
 
-    add_action('init', function () {
-      // Single product page
-      new WishlistProductPage();
-      new WishlistProductPageController();
+	/**
+	 * Run the plugin
+	 */
+	public static function run() {
+		if ( is_admin() ) {
+			new FormController();
+			new Admin();
+		}
 
-      // My Account
-      new WishlistAccountEndpoint();
-      new WishlistAjaxController();
+		add_action(
+			'init',
+			function () {
+				// Single product page.
+				new WishlistProductPage();
+				new WishlistProductPageController();
 
-      // Actions
-      new Actions();
-    });
+				// My Account.
+				new WishlistAccountEndpoint();
+				new WishlistAjaxController();
 
-    /**
-     * In case there are settings update, ensure to return the fresh data.
-     */
-    add_action('updated_option', function ($option, $old, $new) {
-      if ($option === ProductOptions::optionKey()) {
-        ProductOptions::refresh();
-      }
-      if ($option === MyAccountOptions::optionKey()) {
-        MyAccountOptions::refresh();
-      }
-      if ($option === GeneralSettingOptions::optionKey()) {
-        GeneralSettingOptions::refresh();
-      }
-    }, 10, 3);
-  }
+				// Actions.
+				new Actions();
+			}
+		);
+
+		/**
+		 * In case there are settings update, ensure to return the fresh data.
+		 */
+		add_action(
+			'updated_option',
+			function ( $option ) {
+				if ( ProductOptions::optionKey() === $option ) {
+					ProductOptions::refresh();
+				}
+				if ( MyAccountOptions::optionKey() === $option ) {
+					MyAccountOptions::refresh();
+				}
+				if ( GeneralSettingOptions::optionKey() === $option ) {
+					GeneralSettingOptions::refresh();
+				}
+			},
+			10,
+			3
+		);
+	}
 }

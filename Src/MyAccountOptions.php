@@ -3,8 +3,8 @@
 namespace ReaganMahinay\RGNCustomerWishlist;
 
 // Exit if accessed directly.
-if (!defined('ABSPATH')) {
-  exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 /**
@@ -26,207 +26,194 @@ if (!defined('ABSPATH')) {
  * @since 1.0.0
  * @package Src
  */
-final class MyAccountOptions
-{
-  /**
-   *  Option key for storing this feature's settings in WordPress.
-   *  @since 1.0.0
-   */
-  private const KEY = 'rgnmhn_customer_wishlist_my_account_settings';
+final class MyAccountOptions {
 
-  /**
-   * Cached plugin options array.
-   *
-   * @var array<string, mixed>|null
-   */
-  private static $option =  null;
+	/**
+	 *  Option key for storing this feature's settings in WordPress.
+	 *
+	 *  @since 1.0.0
+	 */
+	private const KEY = 'rgnmhn_customer_wishlist_my_account_settings';
 
-  /**
-   * Returns the canonical option key used to persist settings in wp_options.
-   *
-   * Use this helper instead of hard-coding the option name. If the key ever
-   * needs to change, only this class must be updated; all call sites remain intact.
-   *
-   * @return string The option key (e.g. 'rgn_customer_wishlist_my_account_settings').
-   * @since 1.0.0
-   */
-  public static function optionKey()
-  {
-    return self::KEY;
-  }
+	/**
+	 * Cached plugin options array.
+	 *
+	 * @var array<string, mixed>|null
+	 */
+	private static $option = null;
 
-  /**
-   * Retrieve and cache the My Account options from the database.
-   *
-   * Falls back to an empty array if no options are stored.
-   *
-   * @since 1.0.0
-   * @return array<string, mixed>
-   */
-  private static function getOptions()
-  {
-    return self::$option ??= get_option(self::optionKey(), []);
-  }
+	/**
+	 * The option key
+	 */
+	public static function optionKey() {
+		return self::KEY;
+	}
 
-  /**
-   * Refresh the cached options, forcing the next call to getOptions()
-   * to re-fetch from the database.
-   *
-   * @since 1.0.0
-   * @return void
-   */
-  public static function refresh()
-  {
-    self::$option = null;
-  }
+	/**
+	 * Retrieve and cache the My Account options from the database.
+	 *
+	 * Falls back to an empty array if no options are stored.
+	 *
+	 * @since 1.0.0
+	 * @return array<string, mixed>
+	 */
+	private static function getOptions() {
+		return self::$option ??= get_option( self::optionKey(), array() );
+	}
 
-  /**
-   * Get the slug used for the My Account wishlist menu.
-   *
-   * Falls back to "my-wishlist" if not set.
-   *
-   * @since 1.0.0
-   * @return string Sanitized slug string.
-   */
-  public static function getSlug()
-  {
-    self::getOptions();
-    if (!empty(self::$option) && self::has('menu-slug')) {
-      return (string) sanitize_title(self::$option['menu-slug']);
-    }
-    return 'my-wishlist';
-  }
+	/**
+	 * Refresh the cached options, forcing the next call to getOptions()
+	 * to re-fetch from the database.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public static function refresh() {
+		self::$option = null;
+	}
 
-  /**
-   * Get the title of the My Account wishlist menu.
-   *
-   * Falls back to "My Wishlist" if not set.
-   *
-   * @since 1.0.0
-   * @return string Menu title.
-   */
-  public static function getMenuTitle()
-  {
-    self::getOptions();
-    if (!self::emptyOption() && self::has('menu-title')) {
-      return (string) self::$option['menu-title'];
-    }
-    return 'My Wishlist';
-  }
+	/**
+	 * Get the slug used for the My Account wishlist menu.
+	 *
+	 * Falls back to "my-wishlist" if not set.
+	 *
+	 * @since 1.0.0
+	 * @return string Sanitized slug string.
+	 */
+	public static function getSlug() {
+		self::getOptions();
+		if ( ! empty( self::$option ) && self::has( 'menu-slug' ) ) {
+			return (string) sanitize_title( self::$option['menu-slug'] );
+		}
+		return 'my-wishlist';
+	}
 
-  /**
-   * Get the title displayed in the wishlist content section.
-   *
-   * Falls back to "List of Wishlist" if not set.
-   *
-   * @since 1.0.0
-   * @return string Content title.
-   */
-  public static function getContentTitle()
-  {
-    self::getOptions();
-    if (!self::emptyOption() && self::has('content-title')) {
-      return (string) self::$option['content-title'];
-    }
-    return 'List of Wishlist';
-  }
+	/**
+	 * Get the title of the My Account wishlist menu.
+	 *
+	 * Falls back to "My Wishlist" if not set.
+	 *
+	 * @since 1.0.0
+	 * @return string Menu title.
+	 */
+	public static function getMenuTitle() {
+		self::getOptions();
+		if ( ! self::emptyOption() && self::has( 'menu-title' ) ) {
+			return (string) self::$option['menu-title'];
+		}
+		return 'My Wishlist';
+	}
 
-  /**
-   * Get the message shown when the wishlist is empty.
-   *
-   * Falls back to "Wishlist is empty, add some!" if not set.
-   *
-   * @since 1.0.0
-   * @return string Empty wishlist message.
-   */
-  public static function getEmptyContentMessage()
-  {
-    self::getOptions();
-    if (!self::emptyOption() && self::has('content-empty-message')) {
-      return (string) self::$option['content-empty-message'];
-    }
-    return 'Wishlist is empty, add some!';
-  }
+	/**
+	 * Get the title displayed in the wishlist content section.
+	 *
+	 * Falls back to "List of Wishlist" if not set.
+	 *
+	 * @since 1.0.0
+	 * @return string Content title.
+	 */
+	public static function getContentTitle() {
+		self::getOptions();
+		if ( ! self::emptyOption() && self::has( 'content-title' ) ) {
+			return (string) self::$option['content-title'];
+		}
+		return 'List of Wishlist';
+	}
+
+	/**
+	 * Get the message shown when the wishlist is empty.
+	 *
+	 * Falls back to "Wishlist is empty, add some!" if not set.
+	 *
+	 * @since 1.0.0
+	 * @return string Empty wishlist message.
+	 */
+	public static function getEmptyContentMessage() {
+		self::getOptions();
+		if ( ! self::emptyOption() && self::has( 'content-empty-message' ) ) {
+			return (string) self::$option['content-empty-message'];
+		}
+		return 'Wishlist is empty, add some!';
+	}
 
 
-  /**
-   * Check if options are empty.
-   *
-   * @since 1.0.0
-   * @return bool True if empty, false otherwise.
-   */
-  private static function emptyOption()
-  {
-    return empty(self::$option);
-  }
+	/**
+	 * Check if options are empty.
+	 *
+	 * @since 1.0.0
+	 * @return bool True if empty, false otherwise.
+	 */
+	private static function emptyOption() {
+		return empty( self::$option );
+	}
 
-  /**
-   * Check if a specific key exists in the options array.
-   *
-   * @since 1.0.0
-   * @param string $key Option key to check.
-   * @return bool True if key exists, false otherwise.
-   */
-  private static function has(string $key)
-  {
-    return isset(self::$option[$key]);
-  }
+	/**
+	 * Check if a specific key exists in the options array.
+	 *
+	 * @since 1.0.0
+	 * @param string $key Option key to check.
+	 * @return bool True if key exists, false otherwise.
+	 */
+	private static function has( string $key ) {
+		return isset( self::$option[ $key ] );
+	}
 
 
-  public static function getKeysAndRules()
-  {
-    $output = [];
-    foreach (self::fields() as $field) {
-      $output[$field['name']] = $field['rules'];
-    }
-    return $output;
-  }
+	/**
+	 * Get field key and rules
+	 */
+	public static function getKeysAndRules() {
+		$output = array();
+		foreach ( self::fields() as $field ) {
+			$output[ $field['name'] ] = $field['rules'];
+		}
+		return $output;
+	}
 
 
-  /**
-   * Define the fields used for My Account wishlist settings.
-   *
-   * Each field includes attributes like type, id, name,
-   * current value, label, and description.
-   *
-   * @since 1.0.0
-   */
-  public static function fields()
-  {
-    return [
-      'menu-title' => [
-        'type' => 'text',
-        'id' => 'menu-title',
-        'name' => 'menu-title',
-        'value' => self::getMenuTitle(),
-        'label' => __('Menu Title', 'rgnmhn-customer-wishlist'),
-        'rules' => ['type' => 'text']
-      ],
-      'menu-slug' => [
-        'type' => 'text',
-        'id' => 'menu-slug',
-        'name' => 'menu-slug',
-        'value' => self::getSlug(),
-        'label' => __('Menu Slug', 'rgnmhn-customer-wishlist'),
-        'description' => __('No spaces are allowed valid slug only.', 'rgnmhn-customer-wishlist'),
-        'rules' => ['type' => 'text']
-      ],
-      'content-title' => [
-        'type' => 'text',
-        'id' => 'content-title',
-        'name' => 'content-title',
-        'value' => self::getContentTitle(),
-        'label' => __('Content Title', 'rgnmhn-customer-wishlist'),
-        'rules' => ['type' => 'text']
-      ],
-      'content-empty-message' => [
-        'type' => 'text',
-        'id' => 'content-empty-message',
-        'name' => 'content-empty-message',
-        'value' => self::getEmptyContentMessage(),
-        'label' => __('Empty wishlist message', 'rgnmhn-customer-wishlist'),
-        'rules' => ['type' => 'text']
-      ],
-    ];
-  }
+	/**
+	 * Define the fields used for My Account wishlist settings.
+	 *
+	 * Each field includes attributes like type, id, name,
+	 * current value, label, and description.
+	 *
+	 * @since 1.0.0
+	 */
+	public static function fields() {
+		return array(
+			'menu-title'            => array(
+				'type'  => 'text',
+				'id'    => 'menu-title',
+				'name'  => 'menu-title',
+				'value' => self::getMenuTitle(),
+				'label' => __( 'Menu Title', 'rgnmhn-customer-wishlist' ),
+				'rules' => array( 'type' => 'text' ),
+			),
+			'menu-slug'             => array(
+				'type'        => 'text',
+				'id'          => 'menu-slug',
+				'name'        => 'menu-slug',
+				'value'       => self::getSlug(),
+				'label'       => __( 'Menu Slug', 'rgnmhn-customer-wishlist' ),
+				'description' => __( 'No spaces are allowed valid slug only.', 'rgnmhn-customer-wishlist' ),
+				'rules'       => array( 'type' => 'text' ),
+			),
+			'content-title'         => array(
+				'type'  => 'text',
+				'id'    => 'content-title',
+				'name'  => 'content-title',
+				'value' => self::getContentTitle(),
+				'label' => __( 'Content Title', 'rgnmhn-customer-wishlist' ),
+				'rules' => array( 'type' => 'text' ),
+			),
+			'content-empty-message' => array(
+				'type'  => 'text',
+				'id'    => 'content-empty-message',
+				'name'  => 'content-empty-message',
+				'value' => self::getEmptyContentMessage(),
+				'label' => __( 'Empty wishlist message', 'rgnmhn-customer-wishlist' ),
+				'rules' => array( 'type' => 'text' ),
+			),
+		);
+	}
 }
