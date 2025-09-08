@@ -139,10 +139,28 @@ class WishlistModel {
 	 * @return bool True if the product is in the wishlist, false otherwise.
 	 */
 	public function isProductInWishlist( int $productID, array $identifier ) {
-		$whereCol = ( 'user' === $identifier['type'] ) ? 'user_id' : 'token';
-		$sql      = $this->db->prepare( "SELECT COUNT(id) FROM {$this->tableName} WHERE product_id = %d AND {$whereCol} = %s", $productID, $identifier['id'] );
+		if ( empty( $identifier['type'] ) || ! isset( $identifier['id'] ) ) {
+			return false;
+		}
 
-		$count = $this->db->get_var( $sql );
+		if ( ! in_array( $identifier['type'], array( 'user', 'token' ), true ) ) {
+			return false;
+		}
+		if ( 'user' === $identifier['type'] ) {
+			$sql = $this->db->prepare(
+				"SELECT COUNT(id) FROM {$this->tableName} WHERE product_id = %d AND user_id = %d",
+				$productID,
+				(int) $identifier['id']
+			);
+		} else {
+			$sql = $this->db->prepare(
+				"SELECT COUNT(id) FROM {$this->tableName} WHERE product_id = %d AND token = %s",
+				$productID,
+				(string) $identifier['id']
+			);
+		}
+
+		$count = (int) $this->db->get_var( $sql );
 
 		return $count > 0;
 	}
