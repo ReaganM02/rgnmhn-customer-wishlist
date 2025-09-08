@@ -1,2 +1,4 @@
 /tailwindcss.exe
 /.vscode
+/phpcs.xml
+/vendor
