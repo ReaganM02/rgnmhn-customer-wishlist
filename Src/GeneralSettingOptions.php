@@ -58,26 +58,14 @@ class GeneralSettingOptions {
 	 * @return 'yes'|'no'
 	 */
 	private static function getOption() {
-		if ( null === self::$option ) {
+		if ( null !== self::$option ) {
 			return self::$option;
 		}
 
-		$raw = get_option( self::optionKey(), self::DEFAULT );
-
-		if ( is_string( $raw ) ) {
-			self::$option = $raw;
-			return self::$option;
-		}
-
-		/**
-		 * If it holds a single item or value
-		 */
-		if ( is_scalar( $raw ) ) {
-			self::$option = (string) $raw;
-			return self::$option;
-		}
-
-		return self::DEFAULT;
+		$raw          = get_option( self::optionKey(), self::DEFAULT );
+		$value        = ( 'yes' === $raw ) ? 'yes' : self::DEFAULT;
+		self::$option = $value;
+		return self::$option;
 	}
 
 	/**

@@ -78,7 +78,7 @@ class FormController {
 
 		check_admin_referer( 'rgnmhn_wishlist_general_settings' );
 
-		$value = ( isset( $_POST['remove-data-on-uninstall'] ) ) && ( 'yest' === $_POST['remove-data-on-uninstall'] ) ? 'yes' : 'no';
+		$value = ( isset( $_POST['remove-data-on-uninstall'] ) ) && ( 'yes' === $_POST['remove-data-on-uninstall'] ) ? 'yes' : 'no';
 
 		update_option( GeneralSettingOptions::optionKey(), $value );
 
