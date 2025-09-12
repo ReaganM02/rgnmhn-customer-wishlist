@@ -7,7 +7,7 @@ use ReaganMahinay\RGNCustomerWishlist\MyAccountOptions;
 use ReaganMahinay\RGNCustomerWishlist\ProductOptions;
 
 // Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
+if (! defined('ABSPATH')) {
 	exit;
 }
 
@@ -31,14 +31,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  * @package rgnmhn-customer-wishlist
  */
-class WishlistProductPage {
+class WishlistProductPage
+{
 
 	/**
 	 * Bootstrap the class by wiring up hooks.
 	 *
 	 * @since 1.0.0
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		$this->hooks();
 	}
 
@@ -52,15 +54,16 @@ class WishlistProductPage {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function hooks() {
-		add_action( 'wp_enqueue_scripts', array( $this, 'assets' ) );
+	public function hooks()
+	{
+		add_action('wp_enqueue_scripts', array($this, 'assets'));
 
-		if ( ProductOptions::getSelectedPlacementContent() !== 'use_shortcode' ) {
-			if ( self::hookToUse() ) {
-				add_action( self::hookToUse(), array( $this, 'displayWishlistContent' ), self::hookPriority() );
+		if (ProductOptions::getSelectedPlacementContent() !== 'use_shortcode') {
+			if (self::hookToUse()) {
+				add_action(self::hookToUse(), array($this, 'displayWishlistContent'), self::hookPriority());
 			}
 		} else {
-			add_shortcode( 'rgnmhn_customer_wishlist_single_product', array( $this, 'shortCode' ) );
+			add_shortcode('rgnmhn_customer_wishlist_single_product', array($this, 'shortCode'));
 		}
 	}
 
@@ -73,13 +76,14 @@ class WishlistProductPage {
 	 * @since 1.0.0
 	 * @return string Rendered HTML or empty string if not on a product page.
 	 */
-	public function shortCode() {
-		if ( ! is_product() ) {
+	public function shortCode()
+	{
+		if (! is_product()) {
 			return '';
 		}
 
 		ob_start();
-		$this->displayWishlistContent( get_the_ID() );
+		$this->displayWishlistContent(get_the_ID());
 		return ob_get_clean();
 	}
 
@@ -92,14 +96,15 @@ class WishlistProductPage {
 	 * @since 1.0.0
 	 * @return string|false Hook name or false to disable hook placement.
 	 */
-	private static function hookToUse() {
+	private static function hookToUse()
+	{
 		$defaultHook = ProductOptions::getSelectedPlacementContent();
 		/**
 		 * Filter: rgnmhn_wishlist_placement_product_page
 		 * - Return any WC single product hook (string) to reposition the output.
 		 * - Return false to disable hook placement.
 		 */
-		return apply_filters( 'rgnmhn_wishlist_placement_product_page', $defaultHook );
+		return apply_filters('rgnmhn_wishlist_placement_product_page', $defaultHook);
 	}
 
 	/**
@@ -110,13 +115,14 @@ class WishlistProductPage {
 	 * @since 1.0.0
 	 * @return int
 	 */
-	private static function hookPriority() {
+	private static function hookPriority()
+	{
 		$defaultPriority = 35;
 		/**
 		 * Filter: rgnmhn_wishlist_placement_product_page_priority
 		 * - Adjust the priority of the chosen hook
 		 */
-		return apply_filters( 'rgnmhn_wishlist_placement_product_page_priority', $defaultPriority );
+		return apply_filters('rgnmhn_wishlist_placement_product_page_priority', $defaultPriority);
 	}
 
 	/**
@@ -125,7 +131,8 @@ class WishlistProductPage {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function displayWishlistContent() {
+	public function displayWishlistContent()
+	{
 		$this->getWishlistContent();
 	}
 
@@ -140,8 +147,9 @@ class WishlistProductPage {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function getWishlistContent() {
-		if ( ! is_user_logged_in() && ! ProductOptions::isGuestUserAllowed() ) {
+	public function getWishlistContent()
+	{
+		if (! is_user_logged_in() && ! ProductOptions::isGuestUserAllowed()) {
 			return '';
 		}
 		ob_start();
@@ -153,7 +161,7 @@ class WishlistProductPage {
 		echo ob_get_clean();
 
 		ob_start();
-		self::getTemplateOnce( 'single-product/wishlist.php' );
+		self::getTemplateOnce('single-product/wishlist.php');
 		echo ob_get_clean();
 	}
 
@@ -169,33 +177,34 @@ class WishlistProductPage {
 	 * @param int $productID A product or variation ID.
 	 * @return int[] List of variation IDs that are in the wishlist.
 	 */
-	public function getAddedVariationIDs( int $productID ) {
-		$product = wc_get_product( $productID );
+	public function getAddedVariationIDs(int $productID)
+	{
+		$product = wc_get_product($productID);
 
-		if ( ! $product ) {
+		if (! $product) {
 			return array();
 		}
 
 		$variationIDs = array();
 
 		// If product is variation it means that the given product ID is a variation ID.
-		if ( $product->is_type( 'variation' ) ) {
+		if ($product->is_type('variation')) {
 			$productParentID = $product->get_parent_id();
-			if ( $productParentID > 0 ) {
-				$parentProduct = wc_get_product( $productParentID );
-				if ( $parentProduct && $parentProduct->is_type( 'variable' ) ) {
+			if ($productParentID > 0) {
+				$parentProduct = wc_get_product($productParentID);
+				if ($parentProduct && $parentProduct->is_type('variable')) {
 					$variationIDs = $parentProduct->get_children();
 				}
 			}
-		} elseif ( $product->is_type( 'variable' ) ) {
+		} elseif ($product->is_type('variable')) {
 			$variationIDs = $product->get_children();
 		} else {
 			$variationIDs = array();
 		}
 
-		if ( ! empty( $variationIDs ) ) {
+		if (! empty($variationIDs)) {
 			$wishlist = new WishlistModel();
-			$ids      = $wishlist->getProductIDs( $variationIDs );
+			$ids      = $wishlist->getProductIDs($variationIDs);
 			return $ids;
 		}
 
@@ -211,13 +220,14 @@ class WishlistProductPage {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function getAddToWishlistContent() {
+	public function getAddToWishlistContent()
+	{
 		$icon = ProductOptions::getIcon();
 		$args = array(
-			'icon'  => rgnmhnCustomerWishlistGetIcons()[ $icon ],
+			'icon'  => rgnmhnCustomerWishlistGetIcons()[$icon],
 			'label' => ProductOptions::getWishlistLabel(),
 		);
-		self::getTemplateOnce( 'single-product/add.php', $args );
+		self::getTemplateOnce('single-product/add.php', $args);
 	}
 
 
@@ -227,12 +237,13 @@ class WishlistProductPage {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function getAddedWishlistContent() {
+	public function getAddedWishlistContent()
+	{
 		$args = array(
 			'slug'  => MyAccountOptions::getSlug(),
 			'label' => ProductOptions::getAddedToWishlistLabel(),
 		);
-		self::getTemplateOnce( 'single-product/added.php', $args );
+		self::getTemplateOnce('single-product/added.php', $args);
 	}
 
 	/**
@@ -243,7 +254,8 @@ class WishlistProductPage {
 	 * @param array<string,mixed> $data Variables to extract into template scope.
 	 * @return void
 	 */
-	private static function getTemplateOnce( string $path, $data = array() ) {
+	private static function getTemplateOnce(string $path, $data = array())
+	{
 		require_once RGNMHN_CUSTOMER_WISHLIST_PATH . 'templates/' . $path;
 	}
 
@@ -253,8 +265,9 @@ class WishlistProductPage {
 	 * @since 1.0.0
 	 * @return string
 	 */
-	private function getProductType() {
-		$product = wc_get_product( get_the_ID() );
+	private function getProductType()
+	{
+		$product = wc_get_product(get_the_ID());
 		return $product->get_type();
 	}
 
@@ -265,11 +278,12 @@ class WishlistProductPage {
 	 * @since 1.0.0
 	 * @return "yes"|"no"
 	 */
-	public function isAdded( int $productID ) {
+	public function isAdded(int $productID)
+	{
 		$wishlist   = new WishlistModel();
 		$identifier = wishListIdentifier();
-		$isAdded    = $wishlist->isProductInWishlist( $productID, $identifier );
-		if ( empty( $isAdded ) ) {
+		$isAdded    = $wishlist->isProductInWishlist($productID, $identifier);
+		if (empty($isAdded)) {
 			return 'no';
 		}
 		return 'yes';
@@ -288,13 +302,14 @@ class WishlistProductPage {
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function assets() {
+	public function assets()
+	{
 		// $path = RGNMHN_CUSTOMER_WISHLIST_PATH . 'assets/js/rgnmhn-customer-wishlist-single-product.js';
-		if ( is_product() ) {
+		if (is_product()) {
 			wp_enqueue_script(
 				'rgnmhn-customer-wishlist-single-product',
 				RGNMHN_CUSTOMER_WISHLIST_URL . 'assets/js/rgnmhn-customer-wishlist-single-product.js',
-				array( 'jquery', 'wc-add-to-cart-variation' ),
+				array('jquery', 'wc-add-to-cart-variation'),
 				RGNMHN_CUSTOMER_WISHLIST_VERSION,
 				true
 			);
@@ -303,15 +318,15 @@ class WishlistProductPage {
 				'rgnmhn-customer-wishlist-single-product',
 				'rgnmhn_wishlist_single_product',
 				array(
-					'url'          => admin_url( 'admin-ajax.php' ),
+					'url'          => admin_url('admin-ajax.php'),
 					'nonce'        => array(
-						'add' => wp_create_nonce( 'rgnmhn_add_customer_wishlist_security' ),
-						'get' => wp_create_nonce( 'rgnmhn_get_customer_wishlist_security' ),
+						'add' => wp_create_nonce('rgnmhn_add_customer_wishlist_security'),
+						'get' => wp_create_nonce('rgnmhn_get_customer_wishlist_security'),
 					),
 					'product_id'   => get_the_ID(),
-					'added_ids'    => $this->getAddedVariationIDs( get_the_ID() ),
+					'added_ids'    => $this->getAddedVariationIDs(get_the_ID()),
 					'product_type' => $this->getProductType(),
-					'is_added'     => $this->isAdded( get_the_ID() ),
+					'is_added'     => $this->isAdded(get_the_ID()),
 				)
 			);
 
@@ -327,11 +342,11 @@ class WishlistProductPage {
 				array(),
 				RGNMHN_CUSTOMER_WISHLIST_VERSION
 			);
-			wp_add_inline_style( 'rgnmhn-customer-wishlist-inline', self::inlineCss() );
+			wp_add_inline_style('rgnmhn-customer-wishlist-inline', self::inlineCss());
 			wp_enqueue_style(
 				'rgnmhn-customer-wishlist-single-product',
 				RGNMHN_CUSTOMER_WISHLIST_URL . 'assets/css/rgnmhn-customer-wishlist.css',
-				array( 'rgnmhn-customer-wishlist-inline' ),
+				array('rgnmhn-customer-wishlist-inline'),
 				RGNMHN_CUSTOMER_WISHLIST_VERSION
 			);
 		}
@@ -343,21 +358,25 @@ class WishlistProductPage {
 	 * @since 1.0.0
 	 * @return string A CSS string injected via `wp_add_inline_style`.
 	 */
-	public static function inlineCss() {
-		$backgroundColor     = sanitize_hex_color( ProductOptions::getBackgroundColor() );
-		$color               = sanitize_hex_color( ProductOptions::getTextColor() );
-		$fontSize            = absint( ProductOptions::getFontSize() );
-		$svgSize             = absint( ProductOptions::getIconSize() );
-		$browseWishlistColor = sanitize_hex_color( ProductOptions::getBrowseWishlistColor() );
-
-		return "
+	public static function inlineCss()
+	{
+		$cssFormat = "
       :root {
-        --rgnmhn-wishlist-bg-color: $backgroundColor;
-        --rgnmhn-wishlist-text-color:  $color;
-        --rgnmhn-wishlist-font-size: $fontSize" . "px;
-        --rgnmhn-wishlist-svg-size: $svgSize" . "px;
-        --rgnmhn-wishlist-browse-wishlist: $browseWishlistColor;
+        --rgnmhn-wishlist-bg-color: %s;
+        --rgnmhn-wishlist-text-color: %s;
+        --rgnmhn-wishlist-font-size: %dpx;
+        --rgnmhn-wishlist-svg-size: %dpx;
+        --rgnmhn-wishlist-browse-wishlist: %s;
       }
     ";
+
+		return sprintf(
+			$cssFormat,
+			sanitize_hex_color(ProductOptions::getBackgroundColor()),
+			sanitize_hex_color(ProductOptions::getTextColor()),
+			absint(ProductOptions::getFontSize()),
+			absint(ProductOptions::getIconSize()),
+			sanitize_hex_color(ProductOptions::getBrowseWishlistColor())
+		);
 	}
 }
