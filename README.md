@@ -1,3 +1,5 @@
+![Icon](https://ps.w.org/rgnmhn-customer-wishlist/assets/icon-256x256.png)
+![Banner](https://ps.w.org/rgnmhn-customer-wishlist/assets/banner-1544x500.png)
 # Simple Customer Wishlist by ReaganM
 
 **Author:** Reagan Mahinay  
