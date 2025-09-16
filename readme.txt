@@ -1,4 +1,4 @@
-=== Simple Customer Wishlist by RGNMHN ===
+=== Simple Customer Wishlist by ReaganM ===
 Author: Reagan Mahinay
 Author URI: https://github.com/ReaganM02
 Contributors: reagandev
@@ -10,16 +10,20 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Adds a lightweight “Save to Wishlist” button on WooCommerce products, helping customers save items for later.
+Create a fast, translation-ready WooCommerce wishlist. Support for variable products, guest users, and fully customizable styles.
 
 == Description ==
-RGNMHN Customer Wishlist adds a clean “Save to Wishlist” button on WooCommerce product pages. Built for performance and flexibility, it allows your customers to save products for later, boosting engagement and conversions.
+Give your customers a seamless way to save and manage their favorite products with this fully customizable Wishlist plugin for WooCommerce.
 
-== Installation ==
-1. Upload the plugin files to `/wp-content/plugins/rgnmhn-customer-wishlist/`.
-2. Activate through **Plugins > Installed Plugins** in WordPress.
-3. Configure settings in the dashboard lower part.
-4. (Optional) Use `[rgnmhn_customer_wishlist_single_product]` shortcode to place the button.
+== Features ==
+* **Add to Wishlist:** Customers can easily add products — including variable products — to their personalized wishlist.
+* **Guest Support:** Allow guest users to create wishlists (optional setting).
+* **Customizable Design:** Change icons, button text, colors, and font sizes to match your site’s branding.
+* **My Account Integration:** Customize the menu title, content title, and even the My Account page slug for full control over how the wishlist appears.
+* **Wishlist Management:** Users can view, delete, or add items to their cart directly from the wishlist page.
+* **Variation Product Support:** Add wishlist functionality to variable products and variations.
+* **Translation Ready:** Fully internationalization (i18n) and localization (l10n) ready — easily translate text into any language using tools like Loco Translate or WPML.
+
 
 == Frequently Asked Questions ==
 = Does it work with variable products? =
@@ -28,6 +32,8 @@ Yes, variable products are supported and can be saved to the wishlist.
 = Is it translation-ready? =
 Yes. You can use tools like Loco Translate to add your own translations.
 
+= How to add custom icon? =
+Yes, you can add a custom SVG icon using the available filter `rgnmhn_customer_wishlist_add_custom_icon_for_single_product`. [See example](https://github.com/ReaganM02/rgnmhn-customer-wishlist/blob/v1.0.0/examples/add-custom-wishlist-icon.md)
 == Changelog ==
 = 1.0.0 =
 * Initial release.
