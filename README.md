@@ -1,6 +1,13 @@
 ![Banner](https://ps.w.org/rgnmhn-customer-wishlist/assets/banner-1544x500.png)
 
-# <img src="https://ps.w.org/rgnmhn-customer-wishlist/assets/icon-256x256.png" alt="Icon" width="50" height="50"/> Simple Customer Wishlist by ReaganM
+<h1>
+  <img src="https://ps.w.org/rgnmhn-customer-wishlist/assets/icon-256x256.png" 
+       alt="Icon" 
+       width="50" 
+       height="50" 
+       style="vertical-align: middle; margin-right: 10px;">
+  Simple Customer Wishlist by ReaganM
+</h1>
 
 **Author:** Reagan Mahinay  
 **Author URI:** [https://github.com/ReaganM02](https://github.com/ReaganM02)  
