@@ -49,6 +49,13 @@ A: Yes. You can use tools like Loco Translate to add your own translations.
 A: Yes, you can add a custom SVG icon using the available filter `rgnmhn_customer_wishlist_add_custom_icon_for_single_product`.  
 [See example](https://github.com/ReaganM02/rgnmhn-customer-wishlist/blob/v1.0.0/examples/add-custom-wishlist-icon.md)
 
+## Screenshots
+### My Account wish list
+![My Account wish list](https://ps.w.org/rgnmhn-customer-wishlist/assets/screenshot-1.jpg)
+### Admin Product Settings
+![Product Settings](https://ps.w.org/rgnmhn-customer-wishlist/assets/screenshot-2.jpg)
+### My Account Settings
+![My Account Settings](https://ps.w.org/rgnmhn-customer-wishlist/assets/screenshot-3.jpg)
 ---
 
 ## Changelog
