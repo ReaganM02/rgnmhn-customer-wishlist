@@ -18,11 +18,11 @@
  * @property {"yes"|"no"} is_added - Whether the product is already in the wishlist.
  * 
  * - Two <template> elements exist in the DOM:
- *   <template id="rgn-template-add-wishlist">...</template>
- *   <template id="rgn-template-added-wishlist">...</template>
+ *   <template id="rgnmhn-template-add-wishlist">...</template>
+ *   <template id="rgnmhn-template-added-wishlist">...</template>
  * 
  * - A root container exists with an element id equal to the constructor argument (no '#'):
- *   <div id="rgn-wishlist-single-product"></div>
+ *   <div id="rgnmhn-wishlist-single-product"></div>
  * 
  * - For variable products, WooCommerce triggers:
  *   - 'found_variation' on 'form.variations_form' with { variation_id }
@@ -37,7 +37,7 @@
  * Global localized object injected via wp_localize_script().
  * @type {RgnWishlistSingleProduct}
  */
-const WISHLIST_CONFIG = window.rgn_wishlist_single_product
+const WISHLIST_CONFIG = window.rgnmhn_wishlist_single_product
 
 class WishlistSingleProduct {
   /** @type {HTMLDivElement|null} Root container for injected template content */
@@ -45,10 +45,10 @@ class WishlistSingleProduct {
 
   // Given Template IDs
   /** @type {string} Template id for the "already added" state */
-  #added = 'rgn-template-added-wishlist'
+  #added = 'rgnmhn-template-added-wishlist'
 
   /** @type {string} Template id for the "add to wishlist" state */
-  #add = 'rgn-template-add-wishlist'
+  #add = 'rgnmhn-template-add-wishlist'
 
   // Only for variable products
 
@@ -77,10 +77,10 @@ class WishlistSingleProduct {
   /**
  * @constructor
  * @param {string} rootSelector - The element ID (without '#') of the root container:
- *                                e.g., 'rgn-wishlist-single-product'
+ *                                e.g., 'rgnmhn-wishlist-single-product'
  *
  * Sets up a delegated click handler inside the root to capture clicks
- * on elements matching `.rgn-add-to-wishlist`.
+ * on elements matching `.rgnmhn-add-to-wishlist`.
  */
   constructor(rootSelector) {
     this.#root = document.getElementById(rootSelector)
@@ -88,12 +88,13 @@ class WishlistSingleProduct {
     // Guard: only attach events if a valid div root exists
     if (this.#root && this.#root instanceof HTMLDivElement) {
       this.#root.addEventListener('click', async (e) => {
-        const btn = e.target.closest('.rgn-add-to-wishlist')
+        console.log('clicked')
+        const btn = e.target.closest('.rgnmhn-add-to-wishlist')
         if (btn && this.#root.contains(btn)) {
           try {
             // UI lock while request is in-flight (prevent double-taps)
             btn.disabled = true
-            btn.classList.add('rgn-btn-disabled')
+            btn.classList.add('rgnmhn-btn-disabled')
             await this.handleAddWishlist()
           } catch (error) {
             // Swallow errors to keep UI responsive; log for debugging.
@@ -101,7 +102,7 @@ class WishlistSingleProduct {
           } finally {
             // Always restore button state
             btn.disabled = false
-            btn.classList.remove('rgn-btn-disabled')
+            btn.classList.remove('rgnmhn-btn-disabled')
           }
         }
       })
@@ -135,7 +136,7 @@ class WishlistSingleProduct {
   async handleAddWishlist() {
     try {
       const formData = new FormData()
-      formData.append('action', 'rgn_add_customer_wishlist')
+      formData.append('action', 'rgnmhn_add_customer_wishlist')
 
       // Decide which id to submit based on product type
       if (this.productType === "simple") {
@@ -258,7 +259,7 @@ class WishlistSingleProduct {
   * - May update the DOM (simple products) by re-rendering the template.
   * 
   * Network:
-  * - POSTs to `WISHLIST_CONFIG.url` (admin-ajax) with action `rgn_customer_wishlist_get_data`.
+  * - POSTs to `WISHLIST_CONFIG.url` (admin-ajax) with action `rgnmhn_customer_wishlist_get_data`.
   * - Intended to bypass caches; server should send no-cache headers. The client
   *   may also set `cache: 'no-store'` to avoid browser-level caching.
   * 
@@ -271,7 +272,7 @@ class WishlistSingleProduct {
   async init() {
     try {
       const fd = new FormData()
-      fd.append('action', 'rgn_customer_wishlist_get_data')
+      fd.append('action', 'rgnmhn_customer_wishlist_get_data')
       fd.append('security', WISHLIST_CONFIG.nonce.get)
       fd.append('product-id', WISHLIST_CONFIG.product_id)
       const request = await fetch(WISHLIST_CONFIG.url, {
@@ -302,7 +303,7 @@ class WishlistSingleProduct {
  */
 
 // Instantiate using the root element id (no leading '#')
-const wishlist = new WishlistSingleProduct('rgn-wishlist-single-product')
+const wishlist = new WishlistSingleProduct('rgnmhn-wishlist-single-product')
 
 // Trigger on page load
 wishlist.init()

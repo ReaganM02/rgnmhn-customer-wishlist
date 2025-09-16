@@ -1,5 +1,15 @@
 <?php
 
+namespace ReaganMahinay\RGNCustomerWishlist\Frontend\SingleProduct;
+
+use ReaganMahinay\RGNCustomerWishlist\Models\WishlistModel;
+use ReaganMahinay\RGNCustomerWishlist\Frontend\SingleProduct\WishlistProductPage;
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * WishlistProductPageController
  *
@@ -17,141 +27,124 @@
  *   when a page-level cache is present. (admin-ajax is typically uncached by
  *   caching plugins, but the headers here provide extra protection.)
  *
- * @package Src\Frontend\SingleProduct
+ * @package rgnmhn-customer-wishlist
  * @since   1.0.0
  */
+class WishlistProductPageController {
 
+	/**
+	 * Bootstrap hooks.
+	 */
+	public function __construct() {
+		$this->hooks();
+	}
 
-namespace Src\Frontend\SingleProduct;
+	/**
+	 * Register AJAX actions for both logged-in and guests.
+	 *
+	 * @return void
+	 */
+	public function hooks() {
+		// Add to wishlist.
+		add_action( 'wp_ajax_rgnmhn_add_customer_wishlist', array( $this, 'add' ) );
+		add_action( 'wp_ajax_nopriv_rgnmhn_add_customer_wishlist', array( $this, 'add' ) );
 
-use Src\Models\WishlistModel;
+		// Get wishlist state (for a given product).
+		add_action( 'wp_ajax_rgnmhn_customer_wishlist_get_data', array( $this, 'get' ) );
+		add_action( 'wp_ajax_nopriv_rgnmhn_customer_wishlist_get_data', array( $this, 'get' ) );
+	}
 
-// Exit if accessed directly.
-if (!defined('ABSPATH')) {
-  exit;
-}
+	/**
+	 * AJAX: Get wishlist state for the current product.
+	 *
+	 * Security:
+	 * - Nonce: 'rgnmhn_get_customer_wishlist_security' (sent as 'security')
+	 *
+	 * Caching:
+	 * - Sends no-cache headers to avoid stale responses behind page caches.
+	 *
+	 * Response:
+	 * - variable product: array of added variation IDs
+	 * - simple product:   yes|no strings (is added)
+	 * - otherwise:        fallback with product ID (or error)
+	 *
+	 * @return void Sends JSON and exits.
+	 */
+	public function get() {
+		// Prevent any caching layer from storing the response.
+		nocache_headers();
+		header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0' );
+		header( 'Cache-Control: post-check=0, pre-check=0', false );
 
-class WishlistProductPageController
-{
-  /**
-   * Bootstrap hooks.
-   */
-  public function __construct()
-  {
-    $this->hooks();
-  }
+		check_ajax_referer( 'rgnmhn_get_customer_wishlist_security', 'security' );
 
-  /**
-   * Register AJAX actions for both logged-in and guests.
-   *
-   * @return void
-   */
-  public function hooks()
-  {
-    // Add to wishlist
-    add_action('wp_ajax_rgn_add_customer_wishlist', [$this, 'add']);
-    add_action('wp_ajax_nopriv_rgn_add_customer_wishlist', [$this, 'add']);
+		// Sanitize product ID (unslash, then cast to int).
+		$productID = isset( $_POST['product-id'] ) ? absint( wp_unslash( $_POST['product-id'] ) ) : 0;
 
-    // Get wishlist state (for a given product)
-    add_action('wp_ajax_rgn_customer_wishlist_get_data', [$this, 'get']);
-    add_action('wp_ajax_nopriv_rgn_customer_wishlist_get_data', [$this, 'get']);
-  }
+		if ( ! $productID ) {
+			wp_send_json_error( __( 'Invalid product ID.', 'rgnmhn-customer-wishlist' ) );
+		}
 
-  /**
-   * AJAX: Get wishlist state for the current product.
-   *
-   * Security:
-   * - Nonce: 'rgn_get_customer_wishlist_security' (sent as 'security')
-   *
-   * Caching:
-   * - Sends no-cache headers to avoid stale responses behind page caches.
-   *
-   * Response:
-   * - variable product: array of added variation IDs
-   * - simple product:   yes|no strings (is added)
-   * - otherwise:        fallback with product ID (or error)
-   *
-   * @return void Sends JSON and exits.
-   */
-  public function get()
-  {
-    // Prevent any caching layer from storing the response
-    nocache_headers();
-    header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-    header("Cache-Control: post-check=0, pre-check=0", false);
+		$product = wc_get_product( $productID );
 
-    check_ajax_referer('rgn_get_customer_wishlist_security', 'security');
+		if ( ! $product ) {
+			wp_send_json_error( __( 'Product not found.', 'rgnmhn-customer-wishlist' ) );
+		}
 
-    // Sanitize product ID (unslash, then cast to int)
-    $rawProductID = isset($_POST['product-id']) ? wp_unslash($_POST['product-id']) : 0;
-    $productID     = absint($rawProductID);
+		$singleProduct = new WishlistProductPage();
 
-    if (!$productID) {
-      wp_send_json_error(__('Invalid product ID.', 'rgn-customer-wishlist'));
-    }
+		if ( $product->is_type( 'variable' ) ) {
+			$addedIds = $singleProduct->getAddedVariationIDs( $productID );
+			wp_send_json_success( $addedIds );
+		}
 
-    $product = wc_get_product($productID);
+		if ( $product->is_type( 'simple' ) ) {
+			$isAdded = $singleProduct->isAdded( $productID );
+			wp_send_json_success( $isAdded );
+		}
 
-    if (!$product) {
-      wp_send_json_error(__('Product not found.', 'rgn-customer-wishlist'));
-    }
+		wp_send_json_success( $product->get_id() );
+	}
 
-    $singleProduct = new WishlistProductPage();
+	/**
+	 * AJAX: Add a product (any type) to the wishlist for the current identifier.
+	 *
+	 * Security:
+	 * - Nonce: 'rgnmhn_add_customer_wishlist_security' (sent as 'security')
+	 * - Guests: allowed (uses a custom identifier; ensure the helper is safe)
+	 *
+	 * Behavior:
+	 * - If already in wishlist → error
+	 * - If success → returns product ID
+	 *
+	 * @return void Sends JSON and exits.
+	 */
+	public function add() {
+		check_ajax_referer( 'rgnmhn_add_customer_wishlist_security', 'security' );
 
-    if ($product->is_type('variable')) {
-      $addedIds =  $singleProduct->getAddedVariationIDs($productID);
-      wp_send_json_success($addedIds);
-    }
+		$productID = isset( $_POST['product-id'] ) ? absint( wp_unslash( $_POST['product-id'] ) ) : 0;
 
-    if ($product->is_type('simple')) {
-      $isAdded  = $singleProduct->isAdded($productID);
-      wp_send_json_success($isAdded);
-    }
+		if ( ! $productID ) {
+			wp_send_json_error( __( 'Invalid product ID.', 'rgnmhn-customer-wishlist' ) );
+		}
 
-    wp_send_json_success($product->get_id());
-  }
+		$identifier = wishListIdentifier();
 
-  /**
-   * AJAX: Add a product (any type) to the wishlist for the current identifier.
-   *
-   * Security:
-   * - Nonce: 'rgn_add_customer_wishlist_security' (sent as 'security')
-   * - Guests: allowed (uses a custom identifier; ensure the helper is safe)
-   *
-   * Behavior:
-   * - If already in wishlist → error
-   * - If success → returns product ID
-   *
-   * @return void Sends JSON and exits.
-   */
-  public function add()
-  {
-    check_ajax_referer('rgn_add_customer_wishlist_security', 'security');
+		$wishlist = new WishlistModel();
 
-    $rawProductID = isset($_POST['product-id']) ? wp_unslash($_POST['product-id']) : 0;
-    $productID     = absint($rawProductID);
+		// Prevent duplicates.
+		$alreadyAdded = $wishlist->isProductInWishlist( $productID, $identifier );
 
-    if (!$productID) {
-      wp_send_json_error(__('Invalid product ID.', 'rgn-customer-wishlist'));
-    }
+		if ( $alreadyAdded ) {
+			wp_send_json_error( __( 'Product is already in the wishlist.', 'rgnmhn-customer-wishlist' ) );
+		}
 
-    $identifier = wishListIdentifier();
+		$added = $wishlist->add( $productID, $identifier );
 
-    $wishlist = new WishlistModel();
+		if ( $added ) {
+			wp_send_json_success( $productID );
+		}
 
-    // Prevent duplicates
-    $alreadyAdded = $wishlist->isProductInWishlist($productID, $identifier);
-
-    if ($alreadyAdded) {
-      wp_send_json_error(__('Product is already in the wishlist.', 'rgn-customer-wishlist'));
-    }
-
-    $added = $wishlist->add($productID, $identifier);
-
-    if ($added) {
-      wp_send_json_success($productID);
-    }
-
-    wp_send_json_error(__('Failed to add wishlist.', 'rgn-customer-wishlist'));
-  }
+		wp_send_json_error( __( 'Failed to add wishlist.', 'rgnmhn-customer-wishlist' ) );
+	}
 }
