@@ -18,6 +18,7 @@ Give your customers a seamless way to save and manage their favorite products wi
 == Features ==
 * **Add to Wishlist:** Customers can easily add products — including variable products — to their personalized wishlist.
 * **Guest Support:** Allow guest users to create wishlists (optional setting).
+* **Dynamic Placement:** Display the wishlist button in multiple positions or embed it anywhere using a shortcode.
 * **Customizable Design:** Change icons, button text, colors, and font sizes to match your site’s branding.
 * **My Account Integration:** Customize the menu title, content title, and even the My Account page slug for full control over how the wishlist appears.
 * **Wishlist Management:** Users can view, delete, or add items to their cart directly from the wishlist page.
