@@ -4,7 +4,7 @@ Author URI: https://github.com/ReaganM02
 Contributors: reagandev
 Tags: woocommerce, wishlist, ecommerce, favorites, save products
 Requires at least: 6.1
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
 Stable tag: 1.0.0
 License: GPLv2 or later
@@ -24,6 +24,8 @@ Give your customers a seamless way to save and manage their favorite products wi
 * **Wishlist Management:** Users can view, delete, or add items to their cart directly from the wishlist page.
 * **Variation Product Support:** Add wishlist functionality to variable products and variations.
 * **Translation Ready:** Fully internationalization (i18n) and localization (l10n) ready — easily translate text into any language using tools like Loco Translate or WPML.
+
+📘 Github: [View on GitHub](https://github.com/ReaganM02/rgnmhn-customer-wishlist)
 
 
 == Frequently Asked Questions ==

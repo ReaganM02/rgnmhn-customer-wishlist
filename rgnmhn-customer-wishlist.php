@@ -12,7 +12,7 @@
  * Requires PHP: 7.4
  * Domain Path:       /languages
  * Requires Plugins: woocommerce
- *
+ * Tested up to: 6.9
  * @package rgnmhn-customer-wishlist
  */
 
