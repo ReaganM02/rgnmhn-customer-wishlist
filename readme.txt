@@ -1,4 +1,4 @@
-=== Simple Customer Wishlist by ReaganM ===
+=== ReaganM Customer Wishlist for WooCommerce ===
 Author: Reagan Mahinay
 Author URI: https://github.com/ReaganM02
 Contributors: reagandev

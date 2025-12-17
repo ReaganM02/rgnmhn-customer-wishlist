@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       Simple Customer Wishlist by ReaganM
+ * Plugin Name:       ReaganM Customer Wishlist for WooCommerce
  * Description:       Give your customers the ability to save products to a personalized wishlist. Fully customizable, lightweight, and optimized for speed. Translation-ready, compatible with tools like Loco Translate.
  * Version:           1.0.0
  * Author:            Reagan Mahinay
@@ -20,7 +20,7 @@ use ReaganMahinay\RGNCustomerWishlist\InitializePlugin;
 use ReaganMahinay\RGNCustomerWishlist\PluginAction;
 
 // Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
+if ( !defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -39,7 +39,7 @@ require_once RGNMHN_CUSTOMER_WISHLIST_PATH . 'includes/rgnmhn-customer-wishlist-
 add_filter(
 	'plugin_action_links_' . plugin_basename( __FILE__ ),
 	function ( $links ) {
-		$settings_url  = admin_url( 'admin.php?page=rgnmhn-customer-wishlist' );
+		$settings_url = admin_url( 'admin.php?page=rgnmhn-customer-wishlist' );
 		$settings_link = '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'rgnmhn-customer-wishlist' ) . '</a>';
 		array_unshift( $links, $settings_link );
 		return $links;

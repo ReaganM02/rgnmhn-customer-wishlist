@@ -2,7 +2,7 @@
 
 <img src="https://ps.w.org/rgnmhn-customer-wishlist/assets/icon-256x256.png" alt="Icon" width="60" height="60"/>
 
-# Simple Customer Wishlist by ReaganM
+# ReaganM Customer Wishlist for WooCommerce
 
 **Author:** Reagan Mahinay  
 **Author URI:** [https://github.com/ReaganM02](https://github.com/ReaganM02)  
