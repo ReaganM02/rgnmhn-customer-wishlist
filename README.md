@@ -1,6 +1,5 @@
-![Banner](https://ps.w.org/rgnmhn-customer-wishlist/assets/banner-1544x500.png)
+![Banner](http://reagandev.com/wp-content/uploads/2026/02/thumbnail.webp)
 
-<img src="https://ps.w.org/rgnmhn-customer-wishlist/assets/icon-256x256.png" alt="Icon" width="60" height="60"/>
 
 # ReaganM Customer Wishlist for WooCommerce
 
